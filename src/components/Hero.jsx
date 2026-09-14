@@ -461,8 +461,9 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
             lineHeight: 1.75,
             maxWidth: 540
           }}>
-            Specializing in tactical speech processing, multi-speaker diarization (NVIDIA NeMo) and interactive 3D web applications.
-            Co-author of the <strong>IEEE SPACE 2026 Best Paper Award</strong> on tactical AI communications in collaboration with DRDO.
+            Pioneering defense-grade speech processing and tactical AI systems at <strong>DRDO (Centre for Airborne Systems)</strong>.
+            Co-author of the <strong>IEEE SPACE 2026 Best Paper Award</strong> on AI-based voice deception for aerospace defense,
+            combining deep neural architectures (NVIDIA NeMo, PyTorch) with robust Linux systems engineering.
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#64748b', fontSize: 13, flexWrap: 'wrap' }}>
