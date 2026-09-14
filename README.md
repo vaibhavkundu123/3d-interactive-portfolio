@@ -1,59 +1,39 @@
-# 🏎️ Vaibhav Kundu — 3D Arcade Toy Car & Island Playground
+# 🚀 Vaibhav Kundu — 3D Developer Portfolio Website
 
-An interactive 3D arcade portfolio website built with **Three.js**, **React 19**, and **Vite**, inspired by classic physical playground portfolios (Bruno Simon style).
+A modern, high-end 3D developer portfolio website built with **Three.js**, **React 19**, and **Vite**, featuring an **interactive 3D developer avatar that tracks the user's cursor in real-time**, overhead volumetric spotlight, and purple ambient backglow.
 
 ![Award Badge](https://img.shields.io/badge/IEEE_SPACE_2026-Best_Paper_Winner-f59e0b?style=for-the-badge)
-![DRDO Badge](https://img.shields.io/badge/DRDO_CABS-Research_Trainee-0ea5e9?style=for-the-badge)
-![Tech](https://img.shields.io/badge/Three.js-Arcade_Physics-22c55e?style=for-the-badge)
+![DRDO Badge](https://img.shields.io/badge/DRDO_CABS-Research_Trainee-a855f7?style=for-the-badge)
+![Tech](https://img.shields.io/badge/Three.js-Interactive_3D_Avatar-38bdf8?style=for-the-badge)
 
 ---
 
-## 🎮 Gameplay & Features
+## ✨ Features & Architecture
 
-- **🚗 Playable Arcade Toy Car**:
-  - Front-wheel steering geometry, 4 rotating wheels with tire treads.
-  - Spring suspension dynamics (body roll when drifting, pitch when accelerating/braking).
-  - Headlights casting real light cones on the road during night drives.
-  - Working **Horn** (`H` key or on-screen button) with playful squash-and-stretch bounce.
-  - Jump mechanics (`Spacebar`) and stunt ramps!
-- **🌅 Dynamic Time-of-Day Lighting**:
-  - One-click toggle between **Day** (warm golden sunshine & soft shadows), **Sunset** (vibrant rose-gold twilight), and **Night** (deep starry sky with glowing headlights).
-- **🏝️ Low-Poly Island World**:
-  - Stylized lush grass island surrounded by animated ocean water.
-  - Curving asphalt roadways connecting all 6 pavilions.
-  - Low-poly pine trees, boulders, and wooden stunt ramps.
-- **✨ 6 Thematic Pavilions**:
-  1. **Welcome Plaza (About)**: Gazebo with avatar portrait, bio billboard, and 1-click Resume dispenser.
-  2. **Skills Playground**: 3D domino skill blocks (PyTorch, NeMo, TensorFlow, Python, Java, DSA) that wobble when your car knocks into them!
-  3. **Research District (Experience)**: Low-poly DRDO radar tower & speech frequency visualizer, Sasken school house, Celebal data lab, Infosys clinic.
-  4. **Winner's Podium (Achievements)**: Giant Golden Trophy on a 1st-place victory pedestal celebrating the **IEEE SPACE 2026 Best Paper Award**, with confetti when driving up!
-  5. **The Campus (Education)**: University building with clock tower and flags for Netaji Subhas Engineering College (B.Tech CSE, VP GNX) and South Point High School.
-  6. **Post & Telecom Station (Contact & Gemini AI)**: Drive-in mail kiosk with Formspree contact form (`mwvnrpog`) and interactive Gemini AI bot.
-- **🔊 Web Audio API Procedural Sound Engine**:
-  - Car engine throttle, tire skids, horn honks, wooden block collisions, and jump swooshes (zero external audio files).
-
----
-
-## ⌨️ Controls
-
-| Action | Keyboard | Touch / Mobile |
-| :--- | :--- | :--- |
-| **Accelerate** | `W` or `Up Arrow` | Joystick Up |
-| **Brake / Reverse** | `S` or `Down Arrow` | Joystick Down |
-| **Steer** | `A` / `D` or `Left` / `Right` | Joystick Left / Right |
-| **Jump / Stunt** | `Spacebar` | Jump button |
-| **Honk Horn** | `H` | `HONK!` button |
-| **Inspect Pavilion** | `E` | Tap Pavilion or button |
-| **Autopilot Tour** | Click any station in bottom dock | Tap bottom dock |
+- **👤 Interactive 3D Developer Avatar (Three.js)**:
+  - Stylized 3D character bust (developer with cap, detailed facial features, and hoodie).
+  - **Smooth Mouse & Touch Tracking**: The 3D head and gaze dynamically track your cursor / finger anywhere on the screen with fluid spring damping.
+  - Natural idle breathing animations and periodic eyelid blinking.
+  - Conical volumetric spotlight beam shining down on the avatar.
+  - Vibrant purple/violet ambient radial backglow and floating dust particles.
+- **🎨 Modern Developer Layout**:
+  - **Left Vertical Rail**: Quick social links (GitHub, LinkedIn, Email, Resume).
+  - **Hero Typography**: Bold typography with typewriter role switcher (*"Machine Learning Researcher"*, *"Research Trainee @ DRDO"*, *"IEEE Best Paper Awardee"*).
+  - **About Section**: Professional background, DRDO speech processing focus, and key statistics cards.
+  - **Technical Skills**: 3D interactive skill cards covering AI/ML, NLP, PyTorch, TensorFlow, Python, Java, Django, and Systems.
+  - **Experience**: Timeline featuring DRDO CABS (tactical speech processing, NVIDIA NeMo, Titanet-L, MarbleNet, MSDD) with a live bouncing acoustic waveform visualizer, plus Sasken, Celebal, IEEE CIS, and Infosys.
+  - **Awards & Honors**: Golden celebration card for the **IEEE SPACE 2026 Best Paper Award** for *“AI-Based Voice Deception System for Aerospace and Defense”* with celebratory confetti!
+  - **Education**: Netaji Subhas Engineering College (B.Tech CSE, VP GNX) and South Point High School honors.
+  - **Contact & Gemini AI**: Working Formspree transmission form (`mwvnrpog`), Recruiter Auto-Pitch Drafter from job descriptions, and interactive AI assistant **Sparky**.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **3D Graphics Engine**: Three.js (WebGL, procedural shadows, spot lights, geometries)
-- **Frontend**: React 19, CSS Modules, Glassmorphic Panels
-- **Audio Engine**: HTML5 Web Audio API
-- **AI & Forms**: Google Gemini API, Formspree
+- **3D Graphics**: Three.js (WebGL, procedural PBR materials, spot lights, volumetric beam)
+- **Frontend & UI**: React 19, CSS Modules, Glassmorphic Cards
+- **AI Integrations**: Google Gemini 2.5 API
+- **Form Handling**: Formspree
 
 ---
 

@@ -1,16 +1,17 @@
 :root {
-  --bg-main: #0f172a;
-  --bg-card: rgba(15, 23, 42, 0.88);
-  --bg-card-hover: rgba(30, 41, 59, 0.95);
-  --border-subtle: rgba(255, 255, 255, 0.12);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --blue: #3b82f6;
-  --cyan: #0ea5e9;
+  --bg-dark: #070913;
+  --bg-card: rgba(13, 17, 30, 0.75);
+  --bg-card-hover: rgba(22, 28, 48, 0.85);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-purple: rgba(168, 85, 247, 0.35);
+  --border-cyan: rgba(56, 189, 248, 0.35);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --purple: #a855f7;
+  --purple-glow: rgba(168, 85, 247, 0.4);
+  --cyan: #38bdf8;
   --gold: #f59e0b;
-  --green: #10b981;
-  --purple: #8b5cf6;
-  --pink: #ec4899;
+  --green: #22c55e;
 }
 
 * {
@@ -20,120 +21,155 @@
   -webkit-font-smoothing: antialiased;
 }
 
-body, html {
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: var(--bg-main);
-  color: var(--text-main);
+  min-height: 100%;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  user-select: none;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, .font-heading {
-  font-family: 'Rajdhani', sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-family: 'Orbitron', monospace, sans-serif;
+  letter-spacing: 0.03em;
 }
 
-/* Glass Panels with Soft Shadows */
-.arcade-panel {
+.font-sub {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* Glassmorphism Luxury Cards */
+.dev-card {
   background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45);
   border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
 }
 
-.arcade-panel-gold {
-  background: rgba(26, 20, 15, 0.9);
+.dev-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-purple);
+  box-shadow: 0 20px 50px rgba(168, 85, 247, 0.15);
+  transform: translateY(-3px);
+}
+
+.dev-card-gold {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(13, 17, 30, 0.85));
   backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(245, 158, 11, 0.4);
-  box-shadow: 0 12px 36px 0 rgba(245, 158, 11, 0.18);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
   border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.15);
 }
 
-/* Arcade Buttons */
-.arcade-btn {
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
-  border: none;
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #9333ea, #6366f1);
   color: #ffffff;
-  padding: 10px 22px;
+  border: none;
+  padding: 12px 28px;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.25s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 8px 24px rgba(147, 51, 234, 0.35);
+  text-decoration: none;
 }
 
-.arcade-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(147, 51, 234, 0.5);
 }
 
-.arcade-btn:active {
-  transform: translateY(1px);
-}
-
-.arcade-btn-secondary {
-  background: rgba(30, 41, 59, 0.8);
+.btn-secondary {
+  background: rgba(30, 41, 59, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-main);
-  padding: 8px 16px;
+  color: var(--text-primary);
+  padding: 12px 24px;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  text-decoration: none;
 }
 
-.arcade-btn-secondary:hover {
-  background: rgba(51, 65, 85, 0.9);
-  border-color: #38bdf8;
-  color: #38bdf8;
+.btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.8);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  transform: translateY(-2px);
+}
+
+/* Section Heading styling */
+.section-title-wrap {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-tag {
+  color: var(--purple);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 28px;
+  }
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: #070913;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
+  background: rgba(168, 85, 247, 0.35);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #38bdf8;
+  background: var(--purple);
 }
 
-/* Keyframes */
-@keyframes bounceSlow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
-.animate-bounce-slow {
-  animation: bounceSlow 2.5s ease-in-out infinite;
-}
-
-@keyframes pulseGlow {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.03); }
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 2s infinite;
+/* Glowing Halo Effect */
+.purple-halo {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(99, 102, 241, 0.12) 50%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
 }
