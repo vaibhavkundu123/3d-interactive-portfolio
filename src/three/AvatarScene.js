@@ -22,11 +22,12 @@ export class AvatarScene {
     this.spineBone = null;
     this.initialRotations = {};
 
-    // Animation state
+    // Animation & Reading state
     this.isNodding = false;
     this.nodProgress = 0;
     this.isSpeaking = false;
     this.speechGesture = null;
+    this.readingWeight = 0.0;
 
     // Background cosmic particles
     this.dustParticles = null;
@@ -298,49 +299,106 @@ export class AvatarScene {
     this.camera.position.z += (targetCamZ - this.camera.position.z) * 0.04;
     this.camera.position.y += (targetCamY - this.camera.position.y) * 0.04;
 
-    // Smooth conversational micro-cadence (calm, elegant, organic posture breathing)
+    // Smooth transition between cursor tracking and reading mode
+    const targetReadingWeight = this.isSpeaking ? 1.0 : 0.0;
+    this.readingWeight += (targetReadingWeight - this.readingWeight) * 0.06;
+    const mouseWeight = Math.max(0, 1.0 - this.readingWeight);
+
+    // Conversational micro-cadence
     let speechBob = 0;
     let speechRoll = 0;
     if (this.isSpeaking) {
-      speechBob = Math.sin(time * 1.8) * 0.008;
-      speechRoll = Math.cos(time * 1.4) * 0.005;
+      speechBob = Math.sin(time * 1.8) * 0.006;
+      speechRoll = Math.cos(time * 1.4) * 0.004;
     }
 
-    // Subtle body yaw follows cursor
+    // Reading motion simulation (natural left-to-right scanning across lines of script)
+    let readYaw = 0;
+    let readPitch = 0;
+    let readEyeYaw = 0;
+    let readEyePitch = 0;
+
+    if (this.readingWeight > 0.01) {
+      // 1. Line scanning progress (each text line takes ~2.6 seconds to scan across)
+      const lineProg = (time * 0.38) % 1.0;
+      let scanYaw = 0;
+      if (lineProg < 0.84) {
+        // Smooth scanning from left to right
+        const scanT = lineProg / 0.84;
+        scanYaw = -0.11 + scanT * 0.20;
+      } else {
+        // Natural quick return to start of next line (saccade)
+        const retT = (lineProg - 0.84) / 0.16;
+        scanYaw = 0.09 - retT * 0.20;
+      }
+
+      // 2. Micro-saccades (subtle word-to-word reading jumps)
+      const microSaccade = Math.sin(time * 7.5) * 0.005;
+
+      // 3. Periodic natural glance at audience (looks up briefly every ~6s)
+      const glanceWave = Math.sin(time * 0.4);
+      const isGlancingUp = glanceWave > 0.7 ? (glanceWave - 0.7) / 0.3 : 0;
+
+      // 4. Downward tilt while reading lines, lifting up when connecting with viewer
+      const baseReadingPitch = 0.075; // Angled down toward subtitles
+      readPitch = (baseReadingPitch * (1 - isGlancingUp)) + speechBob;
+      readYaw = (scanYaw + microSaccade) * (1 - isGlancingUp * 0.7);
+
+      readEyeYaw = readYaw * 0.85;
+      readEyePitch = readPitch * 0.9;
+    }
+
+    // Subtle body yaw follows cursor only when not reading intro
     if (this.model) {
-      this.model.rotation.y = this.mouse.x * 0.12;
+      this.model.rotation.y = (this.mouse.x * 0.12) * mouseWeight;
     }
 
-    // 1. NATURAL HEAD TRACKING (Standard Three.js RPM coordinate frame)
-    // - Y-axis: Yaw (horizontal turn left/right)
-    // - X-axis: Pitch (vertical tilt up/down)
-    // - Z-axis: Roll (subtle tilt)
+    // 1. HEAD MOTION: Blend between cursor tracking and reading lines
     if (this.headBone && this.initialRotations.head) {
-      const headYaw = this.mouse.x * 0.45; // Right when mouse is right, left when left
-      const headPitch = -this.mouse.y * 0.28 + nodOffset + speechBob; // Up when mouse is up, down when down
-      const headRoll = -this.mouse.x * 0.06 + speechRoll;
+      const mouseHeadYaw = this.mouse.x * 0.45;
+      const mouseHeadPitch = -this.mouse.y * 0.28 + nodOffset;
+      const mouseHeadRoll = -this.mouse.x * 0.06;
 
-      this.headBone.rotation.y = this.initialRotations.head.y + headYaw;
-      this.headBone.rotation.x = this.initialRotations.head.x + headPitch;
-      this.headBone.rotation.z = this.initialRotations.head.z + headRoll;
+      const finalYaw = (mouseHeadYaw * mouseWeight) + (readYaw * this.readingWeight);
+      const finalPitch = (mouseHeadPitch * mouseWeight) + (readPitch * this.readingWeight);
+      const finalRoll = (mouseHeadRoll * mouseWeight) + (speechRoll * this.readingWeight);
+
+      this.headBone.rotation.y = this.initialRotations.head.y + finalYaw;
+      this.headBone.rotation.x = this.initialRotations.head.x + finalPitch;
+      this.headBone.rotation.z = this.initialRotations.head.z + finalRoll;
     }
 
     if (this.neckBone && this.initialRotations.neck) {
-      const neckYaw = this.mouse.x * 0.20;
-      const neckPitch = -this.mouse.y * 0.12 + speechBob * 0.5;
+      const mouseNeckYaw = this.mouse.x * 0.20;
+      const mouseNeckPitch = -this.mouse.y * 0.12;
 
-      this.neckBone.rotation.y = this.initialRotations.neck.y + neckYaw;
-      this.neckBone.rotation.x = this.initialRotations.neck.x + neckPitch;
+      const finalNeckYaw = (mouseNeckYaw * mouseWeight) + (readYaw * 0.35 * this.readingWeight);
+      const finalNeckPitch = (mouseNeckPitch * mouseWeight) + (readPitch * 0.35 * this.readingWeight);
+
+      this.neckBone.rotation.y = this.initialRotations.neck.y + finalNeckYaw;
+      this.neckBone.rotation.x = this.initialRotations.neck.x + finalNeckPitch;
     }
 
-    // 2. REAL EYE GAZE TRACKING (Eyes look directly towards cursor)
+    // 2. EYE GAZE: Blend between cursor tracking and reading line tracking
     if (this.leftEyeBone && this.initialRotations.leftEye) {
-      this.leftEyeBone.rotation.y = this.initialRotations.leftEye.y + this.mouse.x * 0.12;
-      this.leftEyeBone.rotation.x = this.initialRotations.leftEye.x - this.mouse.y * 0.10;
+      const mouseEyeYaw = this.mouse.x * 0.12;
+      const mouseEyePitch = -this.mouse.y * 0.10;
+
+      const finalEyeYaw = (mouseEyeYaw * mouseWeight) + (readEyeYaw * 0.65 * this.readingWeight);
+      const finalEyePitch = (mouseEyePitch * mouseWeight) + (readEyePitch * 0.65 * this.readingWeight);
+
+      this.leftEyeBone.rotation.y = this.initialRotations.leftEye.y + finalEyeYaw;
+      this.leftEyeBone.rotation.x = this.initialRotations.leftEye.x + finalEyePitch;
     }
     if (this.rightEyeBone && this.initialRotations.rightEye) {
-      this.rightEyeBone.rotation.y = this.initialRotations.rightEye.y + this.mouse.x * 0.12;
-      this.rightEyeBone.rotation.x = this.initialRotations.rightEye.x - this.mouse.y * 0.10;
+      const mouseEyeYaw = this.mouse.x * 0.12;
+      const mouseEyePitch = -this.mouse.y * 0.10;
+
+      const finalEyeYaw = (mouseEyeYaw * mouseWeight) + (readEyeYaw * 0.65 * this.readingWeight);
+      const finalEyePitch = (mouseEyePitch * mouseWeight) + (readEyePitch * 0.65 * this.readingWeight);
+
+      this.rightEyeBone.rotation.y = this.initialRotations.rightEye.y + finalEyeYaw;
+      this.rightEyeBone.rotation.x = this.initialRotations.rightEye.x + finalEyePitch;
     }
 
     // 3. SUBTLE NATURAL BREATHING (Torso remains anchored)

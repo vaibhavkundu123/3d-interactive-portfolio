@@ -53,6 +53,9 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
     if (!canvasRef.current) return;
     const scene = new AvatarScene(canvasRef.current);
     avatarSceneRef.current = scene;
+    if (typeof window !== 'undefined') {
+      window.__avatarScene = scene;
+    }
 
     return () => {
       scene.destroy();
