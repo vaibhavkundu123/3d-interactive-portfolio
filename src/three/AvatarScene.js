@@ -261,18 +261,10 @@ export class AvatarScene {
   startSpeaking(gesture = 'talk') {
     this.isSpeaking = true;
     this.speechGesture = gesture;
-    if (gesture === 'nod' && !this.isNodding) {
-      this.isNodding = true;
-      this.nodProgress = 0;
-    }
   }
 
   updateSpeechGesture(gesture) {
     this.speechGesture = gesture;
-    if (gesture === 'nod' && !this.isNodding) {
-      this.isNodding = true;
-      this.nodProgress = 0;
-    }
   }
 
   stopSpeaking() {
@@ -289,7 +281,7 @@ export class AvatarScene {
     this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.08;
     this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.08;
 
-    // Interactive click nod offset
+    // Interactive click nod offset (only triggered by explicit click)
     let nodOffset = 0;
     if (this.isNodding) {
       this.nodProgress += 0.08;
@@ -306,12 +298,12 @@ export class AvatarScene {
     this.camera.position.z += (targetCamZ - this.camera.position.z) * 0.04;
     this.camera.position.y += (targetCamY - this.camera.position.y) * 0.04;
 
-    // Speaking rhythm & conversational gesture
+    // Smooth conversational micro-cadence (calm, elegant, organic posture breathing)
     let speechBob = 0;
     let speechRoll = 0;
     if (this.isSpeaking) {
-      speechBob = Math.sin(time * 3.8) * 0.022 + Math.sin(time * 1.6) * 0.012;
-      speechRoll = Math.cos(time * 2.4) * 0.012;
+      speechBob = Math.sin(time * 1.8) * 0.008;
+      speechRoll = Math.cos(time * 1.4) * 0.005;
     }
 
     // Subtle body yaw follows cursor

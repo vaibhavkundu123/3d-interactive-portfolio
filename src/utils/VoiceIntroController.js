@@ -1,5 +1,5 @@
 /**
- * VoiceIntroController - Manages speech synthesis, audio chimes, and subtitle timeline
+ * VoiceIntroController - Free-flowing, smooth speech synthesis with real-time subtitle synchronization
  */
 import { INTRO_SCRIPT } from '../data/introScript';
 
@@ -16,8 +16,32 @@ export class VoiceIntroController {
     this.isPaused = false;
     this.selectedVoice = null;
     this.currentUtterance = null;
+    this.heartbeatTimer = null;
+    this.subtitleTimer = null;
 
+    // Calculate phrase character offsets for boundary matching
+    this.preparePhraseOffsets();
     this.initVoice();
+  }
+
+  preparePhraseOffsets() {
+    this.phraseOffsets = [];
+    let runningCharIndex = 0;
+
+    this.script.phrases.forEach((phrase, idx) => {
+      const textLen = phrase.text.length;
+      this.phraseOffsets.push({
+        index: idx,
+        startChar: runningCharIndex,
+        endChar: runningCharIndex + textLen,
+        wordCount: phrase.text.split(/\s+/).length,
+        phrase
+      });
+      // Account for space/newline between phrases
+      runningCharIndex += textLen + 1;
+    });
+
+    this.totalWords = this.phraseOffsets.reduce((acc, p) => acc + p.wordCount, 0);
   }
 
   initVoice() {
@@ -25,9 +49,21 @@ export class VoiceIntroController {
 
     const chooseVoice = () => {
       const voices = this.synth.getVoices();
-      // Look for natural English voices (Google, Microsoft, Daniel, Alex, or default en)
+      if (!voices || voices.length === 0) return;
+
+      // Priority ranking for the smoothest, most natural human voices
       this.selectedVoice =
-        voices.find((v) => v.name.includes('Google US English') || v.name.includes('Natural') || v.name.includes('David')) ||
+        // 1. Google US English (Chromium's smoothest voice)
+        voices.find((v) => v.name === 'Google US English') ||
+        // 2. Google UK English Male
+        voices.find((v) => v.name === 'Google UK English Male') ||
+        // 3. Online Natural / Neural voices
+        voices.find((v) => (v.name.includes('Natural') || v.name.includes('Neural')) && !v.name.includes('Female')) ||
+        // 4. Microsoft Mark (warmer and smoother than David)
+        voices.find((v) => v.name.includes('Mark')) ||
+        // 5. Microsoft David
+        voices.find((v) => v.name.includes('David')) ||
+        // 6. Any other English US voice
         voices.find((v) => v.lang.startsWith('en-US') && !v.name.includes('Zira')) ||
         voices.find((v) => v.lang.startsWith('en')) ||
         voices[0] ||
@@ -85,85 +121,105 @@ export class VoiceIntroController {
       return;
     }
 
-    this.synth.cancel();
+    this.stop();
     this.playIntroChime();
     this.currentPhraseIndex = 0;
     this.isPlaying = true;
     this.isPaused = false;
     this.notifyState();
 
-    // Short delay to let the chime sound, then speak
+    // Start speech after the audio chime
     setTimeout(() => {
       if (this.isPlaying) {
-        this.speakPhrase(0);
+        this.beginContinuousSpeech();
       }
     }, 450);
   }
 
-  speakPhrase(index) {
-    if (!this.isPlaying || index >= this.script.phrases.length) {
-      this.finish();
-      return;
+  beginContinuousSpeech() {
+    // Combine all phrases into one coherent, fluid speech passage
+    const fullText = this.script.phrases.map((p) => p.text).join(' ');
+
+    const utterance = new SpeechSynthesisUtterance(fullText);
+    if (this.selectedVoice) {
+      utterance.voice = this.selectedVoice;
     }
 
-    if (this.phraseTimeout) {
-      clearTimeout(this.phraseTimeout);
-      this.phraseTimeout = null;
-    }
+    // Smooth, warm, natural delivery settings
+    utterance.rate = 0.96; // Fluid, articulate pace
+    utterance.pitch = 0.98; // Warm, natural resonance
 
-    this.currentPhraseIndex = index;
-    const phrase = this.script.phrases[index];
-    this.onPhraseChange(index, phrase);
-    this.notifyState();
+    // Real-time boundary event listener to update subtitles on word/sentence boundaries
+    utterance.onboundary = (event) => {
+      if (!this.isPlaying || this.isPaused) return;
 
-    let phraseCompleted = false;
-    const advanceNext = () => {
-      if (phraseCompleted) return;
-      phraseCompleted = true;
-      if (this.phraseTimeout) {
-        clearTimeout(this.phraseTimeout);
-        this.phraseTimeout = null;
-      }
-      if (this.isPlaying && !this.isPaused) {
-        setTimeout(() => {
-          this.speakPhrase(index + 1);
-        }, 220);
+      const charIdx = event.charIndex;
+      // Match current character index to phrase
+      for (let i = 0; i < this.phraseOffsets.length; i++) {
+        const p = this.phraseOffsets[i];
+        if (charIdx >= p.startChar && charIdx <= p.endChar + 15) {
+          if (this.currentPhraseIndex !== i) {
+            this.currentPhraseIndex = i;
+            this.onPhraseChange(i, p.phrase);
+            this.notifyState();
+          }
+          break;
+        }
       }
     };
 
-    // Calculate fallback duration based on word count (~2.6 words/sec)
-    const wordCount = phrase.text.split(/\s+/).length;
-    const fallbackMs = Math.max(2800, Math.round((wordCount / 2.6) * 1000) + 1200);
+    utterance.onstart = () => {
+      this.startTime = Date.now();
+      this.currentPhraseIndex = 0;
+      this.onPhraseChange(0, this.script.phrases[0]);
+      this.notifyState();
+      this.startTimelineFallback();
+    };
 
-    this.phraseTimeout = setTimeout(() => {
-      advanceNext();
-    }, fallbackMs);
+    utterance.onend = () => {
+      this.finish();
+    };
 
-    try {
-      const utterance = new SpeechSynthesisUtterance(phrase.text);
-      if (this.selectedVoice) {
-        utterance.voice = this.selectedVoice;
+    utterance.onerror = (e) => {
+      console.warn('SpeechSynthesis warning:', e);
+      // Fallback timer will continue subtitles if engine stops
+    };
+
+    this.currentUtterance = utterance;
+
+    // Chrome keep-alive heartbeat: periodically resume to prevent timeout
+    this.heartbeatTimer = setInterval(() => {
+      if (this.isPlaying && !this.isPaused && this.synth?.speaking) {
+        this.synth.resume();
       }
-      utterance.rate = 1.0;
-      utterance.pitch = 1.02;
+    }, 5000);
 
-      utterance.onend = () => {
-        advanceNext();
-      };
+    this.synth.speak(utterance);
+  }
 
-      utterance.onerror = (e) => {
-        console.warn('Speech synthesis warning:', e);
-        advanceNext();
-      };
+  // Fallback timeline tracking based on speech word-rate (~2.5 words/sec at rate 0.96)
+  startTimelineFallback() {
+    if (this.subtitleTimer) clearInterval(this.subtitleTimer);
 
-      this.currentUtterance = utterance;
-      if (this.synth) {
-        this.synth.speak(utterance);
+    this.subtitleTimer = setInterval(() => {
+      if (!this.isPlaying || this.isPaused) return;
+
+      const elapsedSec = (Date.now() - this.startTime) / 1000;
+      const estimatedWords = elapsedSec * 2.55;
+
+      let accumulatedWords = 0;
+      for (let i = 0; i < this.phraseOffsets.length; i++) {
+        accumulatedWords += this.phraseOffsets[i].wordCount;
+        if (estimatedWords < accumulatedWords || i === this.phraseOffsets.length - 1) {
+          if (this.currentPhraseIndex !== i) {
+            this.currentPhraseIndex = i;
+            this.onPhraseChange(i, this.phraseOffsets[i].phrase);
+            this.notifyState();
+          }
+          break;
+        }
       }
-    } catch (err) {
-      console.warn('SpeechSynthesis error:', err);
-      advanceNext();
-    }
+    }, 400);
   }
 
   pause() {
@@ -197,6 +253,8 @@ export class VoiceIntroController {
   stop() {
     this.isPlaying = false;
     this.isPaused = false;
+    if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
+    if (this.subtitleTimer) clearInterval(this.subtitleTimer);
     if (this.synth) {
       this.synth.cancel();
     }
@@ -207,6 +265,8 @@ export class VoiceIntroController {
   finish() {
     this.isPlaying = false;
     this.isPaused = false;
+    if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
+    if (this.subtitleTimer) clearInterval(this.subtitleTimer);
     this.notifyState();
     this.onEnd();
   }

@@ -18,7 +18,7 @@ Outside of my academic projects, my proficiency in Linux environments is further
       id: 1,
       text: "Hello Everyone. I'm Vaibhav Kundu, and I am a final-year B.Tech student in Computer Science and Engineering at Netaji Subhas Engineering College.",
       highlight: "Netaji Subhas Engineering College",
-      gesture: "nod"
+      gesture: "talk"
     },
     {
       id: 2,
@@ -36,7 +36,7 @@ Outside of my academic projects, my proficiency in Linux environments is further
       id: 4,
       text: "I recently completed my internship as a Research Trainee at DRDO.",
       highlight: "Research Trainee at DRDO",
-      gesture: "nod"
+      gesture: "talk"
     },
     {
       id: 5,
@@ -54,7 +54,7 @@ Outside of my academic projects, my proficiency in Linux environments is further
       id: 7,
       text: "where I conducted a comparative study on the performance of Convolutional Neural Networks versus Vision Transformers.",
       highlight: "CNNs vs Vision Transformers",
-      gesture: "nod"
+      gesture: "talk"
     },
     {
       id: 8,
@@ -66,7 +66,7 @@ Outside of my academic projects, my proficiency in Linux environments is further
       id: 9,
       text: "which has also helped me build strong leadership and team collaboration skills. Welcome to my interactive portfolio!",
       highlight: "Welcome to my portfolio!",
-      gesture: "smile"
+      gesture: "talk"
     }
   ]
 };
