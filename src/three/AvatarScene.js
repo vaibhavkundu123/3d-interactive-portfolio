@@ -28,6 +28,8 @@ export class AvatarScene {
     this.isSpeaking = false;
     this.speechGesture = null;
     this.readingWeight = 0.0;
+    this.currentReadingYaw = 0.0;
+    this.currentReadingPitch = 0.0;
 
     // Background cosmic particles
     this.dustParticles = null;
@@ -303,51 +305,58 @@ export class AvatarScene {
     // When intro is speaking, mouse tracking is strictly 0.0 (completely disabled)
     const mouseWeight = this.isSpeaking ? 0.0 : Math.max(0, 1.0 - this.readingWeight);
     const targetReadingWeight = this.isSpeaking ? 1.0 : 0.0;
-    this.readingWeight += (targetReadingWeight - this.readingWeight) * 0.10;
+    this.readingWeight += (targetReadingWeight - this.readingWeight) * 0.08;
 
-    // Conversational micro-cadence
+    // Conversational micro-cadence (soft, slow, calm)
     let speechBob = 0;
     let speechRoll = 0;
     if (this.isSpeaking) {
-      speechBob = Math.sin(time * 1.8) * 0.006;
-      speechRoll = Math.cos(time * 1.4) * 0.004;
+      speechBob = Math.sin(time * 1.0) * 0.0025;
+      speechRoll = Math.cos(time * 0.8) * 0.002;
     }
 
-    // Reading motion simulation (natural left-to-right scanning across subtitles card)
-    let readYaw = 0;
-    let readPitch = 0;
-    let readEyeYaw = 0;
-    let readEyePitch = 0;
+    // Reading motion simulation - paced to match natural human speaking speed (~5.6s per line)
+    let targetReadYaw = 0;
+    let targetReadPitch = 0;
 
     if (this.readingWeight > 0.01) {
-      // 1. Line scanning progress (~2.6s per subtitle line scan)
-      const lineProg = (time * 0.38) % 1.0;
+      // 1. Line scanning progress: ~5.6 seconds per line, matching ~135 words/min spoken pace
+      const lineCycleDuration = 5.6;
+      const lineProg = (time / lineCycleDuration) % 1.0;
+
       let scanYaw = 0;
-      if (lineProg < 0.82) {
-        // Smooth scanning from left to right across the subtitles
-        const scanT = lineProg / 0.82;
-        scanYaw = -0.16 + scanT * 0.32;
+      if (lineProg < 0.84) {
+        // Smooth ease-in-out scan from left (-0.095 rad / ~5.4 deg) to right (+0.095 rad / ~5.4 deg)
+        const t = lineProg / 0.84;
+        const smoothT = t * t * (3 - 2 * t); // Smoothstep curve
+        scanYaw = -0.095 + smoothT * 0.19;
       } else {
-        // Natural quick return saccade to start of next line
-        const retT = (lineProg - 0.82) / 0.18;
-        scanYaw = 0.16 - retT * 0.32;
+        // Gentle, natural return to start of next line
+        const retT = (lineProg - 0.84) / 0.16;
+        const smoothRetT = (1 - Math.cos(retT * Math.PI)) / 2;
+        scanYaw = 0.095 - smoothRetT * 0.19;
       }
 
-      // 2. Micro-saccades (subtle word-to-word reading jumps)
-      const microSaccade = Math.sin(time * 7.8) * 0.007;
+      // 2. Subtle organic breathing micro-motion (soft, living feel without jitter)
+      const organicMicro = Math.sin(time * 2.0) * 0.002;
 
-      // 3. Periodic natural glance at viewer (looks up briefly every ~7s to make direct eye contact)
-      const glanceWave = Math.sin(time * 0.42);
-      const isGlancingUp = glanceWave > 0.84 ? Math.sin(((glanceWave - 0.84) / 0.16) * Math.PI) : 0;
+      // 3. Periodic natural glance at viewer (calm, occurs every ~14s for brief eye contact)
+      const glanceWave = Math.sin(time * 0.22);
+      const isGlancingUp = glanceWave > 0.90 ? Math.sin(((glanceWave - 0.90) / 0.10) * Math.PI) : 0;
 
-      // 4. Clear downward tilt while reading lines (~11.5 deg), lifting up when connecting with viewer
-      const baseReadingPitch = 0.20; // Angled down directly toward subtitles card
-      readPitch = (baseReadingPitch * (1 - isGlancingUp)) + speechBob;
-      readYaw = (scanYaw + microSaccade) * (1 - isGlancingUp * 0.75);
-
-      readEyeYaw = (scanYaw * 0.85) + microSaccade * 1.4;
-      readEyePitch = readPitch * 0.85;
+      // 4. Composed downward gaze toward subtitles (~10° head + ~4° neck)
+      const baseReadingPitch = 0.17; // Stable downward angle toward subtitle box
+      targetReadPitch = (baseReadingPitch * (1 - isGlancingUp)) + speechBob;
+      targetReadYaw = (scanYaw + organicMicro) * (1 - isGlancingUp * 0.75);
     }
+
+    // Smooth lerp filter for reading yaw and pitch to ensure fluid, elegant movement
+    this.currentReadingYaw += (targetReadYaw - this.currentReadingYaw) * 0.06;
+    this.currentReadingPitch += (targetReadPitch - this.currentReadingPitch) * 0.06;
+    const readYaw = this.currentReadingYaw;
+    const readPitch = this.currentReadingPitch;
+    const readEyeYaw = this.currentReadingYaw * 0.92;
+    const readEyePitch = this.currentReadingPitch * 0.92;
 
     // Subtle body yaw follows cursor only when not reading intro
     if (this.model) {
