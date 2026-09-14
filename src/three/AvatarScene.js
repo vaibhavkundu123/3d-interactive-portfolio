@@ -39,10 +39,10 @@ export class AvatarScene {
     // 1. Scene
     this.scene = new THREE.Scene();
 
-    // 2. Camera positioned with ample headroom to prevent any clipping
-    this.camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 50);
-    this.camera.position.set(0, 1.20, 1.62);
-    this.cameraTarget = new THREE.Vector3(0, 1.12, 0);
+    // 2. Camera positioned for portrait bust view with ample headroom
+    this.camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 50);
+    this.camera.position.set(0, 0.36, 1.38);
+    this.cameraTarget = new THREE.Vector3(0, 0.35, 0);
     this.camera.lookAt(this.cameraTarget);
 
     // 3. WebGL Renderer
@@ -54,13 +54,13 @@ export class AvatarScene {
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
+    this.renderer.toneMappingExposure = 1.12;
     this.container.appendChild(this.renderer.domElement);
 
-    // 4. Studio Lighting (Key light, Fill, and Purple Rim Lights)
+    // 4. Studio Lighting (Warm key light, Fill, and Purple Rim Lights)
     this.setupLighting();
 
-    // 5. Load Real 3D Rigged Avatar Model (.glb) with Fair White Skin Tone
+    // 5. Load High-Fidelity 3D Rigged Developer Avatar
     this.loadAvatarModel();
 
     // 6. Deep Ambient Cosmic Dust (Strictly in deep space behind model)
@@ -83,95 +83,91 @@ export class AvatarScene {
 
   setupLighting() {
     // Ambient light (soft violet fill)
-    const ambient = new THREE.AmbientLight(0x2e1065, 1.4);
+    const ambient = new THREE.AmbientLight(0x2e1065, 1.6);
     this.scene.add(ambient);
 
-    // Frontal Soft Key Fill Light (warm flattering light for skin tone)
-    this.frontLight = new THREE.DirectionalLight(0xfff5ea, 1.5);
-    this.frontLight.position.set(0, 1.6, 2.2);
+    // Frontal Soft Key Fill Light (warm flattering light for natural skin tone)
+    this.frontLight = new THREE.DirectionalLight(0xfff7ed, 1.8);
+    this.frontLight.position.set(0, 1.2, 2.0);
     this.scene.add(this.frontLight);
 
     // Overhead Studio Spotlight
-    this.overheadLight = new THREE.SpotLight(0xffffff, 2.2, 8, Math.PI / 4, 0.5, 1.2);
-    this.overheadLight.position.set(0, 3.2, 0.8);
+    this.overheadLight = new THREE.SpotLight(0xffffff, 2.8, 8, Math.PI / 4, 0.4, 1.2);
+    this.overheadLight.position.set(0, 2.8, 0.8);
     this.spotTarget = new THREE.Object3D();
-    this.spotTarget.position.set(0, 1.15, 0);
+    this.spotTarget.position.set(0, 0.35, 0);
     this.scene.add(this.spotTarget);
     this.overheadLight.target = this.spotTarget;
     this.scene.add(this.overheadLight);
 
     // Left Purple Rim Light (Accentuates silhouette)
-    this.rimLeft = new THREE.PointLight(0xa855f7, 3.5, 6);
-    this.rimLeft.position.set(-1.6, 1.35, -0.5);
+    this.rimLeft = new THREE.PointLight(0xa855f7, 4.2, 6);
+    this.rimLeft.position.set(-1.6, 0.5, -0.4);
     this.scene.add(this.rimLeft);
 
     // Right Violet Rim Light
-    this.rimRight = new THREE.PointLight(0x818cf8, 2.8, 6);
-    this.rimRight.position.set(1.6, 1.35, -0.5);
+    this.rimRight = new THREE.PointLight(0x818cf8, 3.4, 6);
+    this.rimRight.position.set(1.6, 0.5, -0.4);
     this.scene.add(this.rimRight);
   }
 
   loadAvatarModel() {
-    const texLoader = new THREE.TextureLoader();
-
-    // Load custom fair white skin tone textures
-    const fairHeadTex = texLoader.load('/avatar_head_fair.png');
-    fairHeadTex.flipY = false;
-    fairHeadTex.colorSpace = THREE.SRGBColorSpace;
-
-    const fairBodyTex = texLoader.load('/avatar_body_fair.png');
-    fairBodyTex.flipY = false;
-    fairBodyTex.colorSpace = THREE.SRGBColorSpace;
-
     const loader = new GLTFLoader();
 
     loader.load(
-      '/avatar.glb',
+      '/avatar.glb?v=2',
       (gltf) => {
         this.model = gltf.scene;
 
-        // Position model slightly lower so top of head has generous headroom
-        this.model.position.set(0, -0.16, 0);
+        // Position model for portrait composition
+        this.model.position.set(0, -1.40, 0);
         this.model.scale.set(1, 1, 1);
 
-        // Find rigged bones and apply fair skin textures with 0 metalness (eliminates silver chrome look)
-        const applyMaterialProperties = (mat) => {
-          if (!mat) return;
-
-          // CRITICAL: Skin, hair, and clothing are non-metals (0.0 metalness)
-          mat.metalness = 0.0;
-
-          if (mat.name === 'm006_head') {
-            mat.map = fairHeadTex;
-            mat.roughness = 0.74; // Soft organic skin
-            mat.needsUpdate = true;
-          } else if (mat.name === 'm006_body') {
-            mat.map = fairBodyTex;
-            mat.roughness = 0.80; // Matte cloth & hands
-            mat.needsUpdate = true;
-          } else if (mat.name === 'm006_opacity') {
-            mat.roughness = 0.88; // Natural matte hair
-            mat.needsUpdate = true;
-          }
-        };
-
+        // Traverse meshes to configure materials
         this.model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
 
+            // Hide glasses for a clean handsome look
+            if (child.name === 'Wolf3D_Glasses') {
+              child.visible = false;
+            }
+
+            // Material tuning
+            const configureMat = (mat) => {
+              if (!mat) return;
+              // Organic skin and fabric have 0 metalness
+              mat.metalness = 0.0;
+
+              if (mat.name === 'Wolf3D_Skin') {
+                mat.roughness = 0.65;
+              } else if (mat.name === 'Wolf3D_Outfit_Top') {
+                // Sleek dark hoodie/jacket
+                mat.color.setHex(0x18181b);
+                mat.roughness = 0.85;
+              } else if (mat.name === 'Wolf3D_Outfit_Bottom') {
+                mat.color.setHex(0x222228);
+                mat.roughness = 0.9;
+              } else if (mat.name === 'Wolf3D_Hair') {
+                mat.color.setHex(0x231812); // Deep brown hair
+                mat.roughness = 0.82;
+              }
+            };
+
             if (Array.isArray(child.material)) {
-              child.material.forEach(applyMaterialProperties);
+              child.material.forEach(configureMat);
             } else {
-              applyMaterialProperties(child.material);
+              configureMat(child.material);
             }
           }
 
+          // Rigged bones for real-time tracking
           if (child.isBone || child.type === 'Bone' || child.type === 'Object3D') {
             if (child.name === 'Head') this.headBone = child;
             if (child.name === 'Neck') this.neckBone = child;
-            if (child.name === 'Bip01 LEye') this.leftEyeBone = child;
-            if (child.name === 'Bip01 REye') this.rightEyeBone = child;
+            if (child.name === 'LeftEye') this.leftEyeBone = child;
+            if (child.name === 'RightEye') this.rightEyeBone = child;
             if (child.name === 'Spine2') this.spineBone = child;
           }
         });
@@ -205,7 +201,7 @@ export class AvatarScene {
 
     for (let i = 0; i < count; i++) {
       pos[i * 3] = (Math.random() - 0.5) * 4.5;
-      pos[i * 3 + 1] = 0.5 + (Math.random() - 0.5) * 3.5;
+      pos[i * 3 + 1] = 0.35 + (Math.random() - 0.5) * 3.5;
       pos[i * 3 + 2] = -1.5 - Math.random() * 2.5; // Deep behind character
 
       const r = Math.random();
@@ -273,40 +269,56 @@ export class AvatarScene {
     let nodOffset = 0;
     if (this.isNodding) {
       this.nodProgress += 0.08;
-      nodOffset = Math.sin(this.nodProgress * Math.PI) * 0.35;
+      nodOffset = Math.sin(this.nodProgress * Math.PI) * 0.28;
       if (this.nodProgress >= 1) {
         this.isNodding = false;
         this.nodProgress = 0;
       }
     }
 
-    // 1. REAL 3D HEAD ROTATION (Proper local axes mapping)
-    // In this bone rig:
-    // - X-axis is UP (rotation around X turns the head Left / Right)
-    // - Z-axis is EAR-TO-EAR (rotation around Z tilts the head Up / Down)
-    // - Y-axis is FORWARD out the nose (keep upright)
+    // 1. NATURAL HEAD TRACKING (Standard Three.js RPM coordinate frame)
+    // - Y-axis: Yaw (horizontal turn left/right)
+    // - X-axis: Pitch (vertical tilt up/down)
+    // - Z-axis: Roll (subtle tilt)
     if (this.headBone && this.initialRotations.head) {
-      // Horizontal turn (Yaw): turns RIGHT when mouse is RIGHT, LEFT when mouse is LEFT
-      this.headBone.rotation.x = this.initialRotations.head.x - this.mouse.x * 0.50;
+      const headYaw = this.mouse.x * 0.45;    // Right when mouse is right, left when left
+      const headPitch = -this.mouse.y * 0.28 + nodOffset; // Up when mouse is up, down when down
+      const headRoll = -this.mouse.x * 0.06;
 
-      // Vertical tilt (Pitch): looks UP when mouse is UP, DOWN when mouse is DOWN
-      this.headBone.rotation.z = this.initialRotations.head.z - this.mouse.y * 0.32 + nodOffset;
-
-      // Keep upright around forward axis
-      this.headBone.rotation.y = this.initialRotations.head.y;
+      this.headBone.rotation.y = this.initialRotations.head.y + headYaw;
+      this.headBone.rotation.x = this.initialRotations.head.x + headPitch;
+      this.headBone.rotation.z = this.initialRotations.head.z + headRoll;
     }
 
-    // 2. SUBTLE NATURAL BREATHING (Torso remains anchored)
+    if (this.neckBone && this.initialRotations.neck) {
+      const neckYaw = this.mouse.x * 0.20;
+      const neckPitch = -this.mouse.y * 0.12;
+
+      this.neckBone.rotation.y = this.initialRotations.neck.y + neckYaw;
+      this.neckBone.rotation.x = this.initialRotations.neck.x + neckPitch;
+    }
+
+    // 2. REAL EYE GAZE TRACKING (Eyes look directly towards cursor)
+    if (this.leftEyeBone && this.initialRotations.leftEye) {
+      this.leftEyeBone.rotation.y = this.initialRotations.leftEye.y + this.mouse.x * 0.12;
+      this.leftEyeBone.rotation.x = this.initialRotations.leftEye.x - this.mouse.y * 0.10;
+    }
+    if (this.rightEyeBone && this.initialRotations.rightEye) {
+      this.rightEyeBone.rotation.y = this.initialRotations.rightEye.y + this.mouse.x * 0.12;
+      this.rightEyeBone.rotation.x = this.initialRotations.rightEye.x - this.mouse.y * 0.10;
+    }
+
+    // 3. SUBTLE NATURAL BREATHING (Torso remains anchored)
     if (this.spineBone && this.initialRotations.spine) {
       this.spineBone.rotation.x = this.initialRotations.spine.x + Math.sin(time * 2.0) * 0.015;
     }
 
-    // 3. Overhead Spotlight subtle tracking for dynamic highlights
+    // 4. Overhead Spotlight subtle tracking for dynamic highlights
     if (this.overheadLight) {
-      this.overheadLight.position.x = this.mouse.x * 0.4;
+      this.overheadLight.position.x = this.mouse.x * 0.35;
     }
 
-    // 4. Deep background star parallax drift
+    // 5. Deep background star parallax drift
     if (this.dustParticles) {
       this.dustParticles.rotation.y = this.mouse.x * 0.1;
       this.dustParticles.rotation.x = -this.mouse.y * 0.06;
