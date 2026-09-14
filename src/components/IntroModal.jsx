@@ -5,25 +5,19 @@ export const IntroModal = ({ onStartIntro, onDismiss }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Only show on first visit in current session
-    const hasSeenIntro = sessionStorage.getItem('vaibhav_intro_modal_seen');
-    if (!hasSeenIntro) {
-      // Small timeout to allow Three.js canvas to mount smoothly
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 700);
-      return () => clearTimeout(timer);
-    }
+    // Show welcome introduction modal on every page load after canvas mounts
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 600);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleStart = () => {
-    sessionStorage.setItem('vaibhav_intro_modal_seen', 'true');
     setIsOpen(false);
     if (onStartIntro) onStartIntro();
   };
 
   const handleSkip = () => {
-    sessionStorage.setItem('vaibhav_intro_modal_seen', 'true');
     setIsOpen(false);
     if (onDismiss) onDismiss();
   };
