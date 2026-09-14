@@ -52,11 +52,33 @@ export const Hero = () => {
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
-      padding: '100px 32px 60px',
-      overflow: 'hidden'
+      padding: '110px 32px 70px',
+      overflow: 'hidden',
+      background: 'radial-gradient(circle at 30% 35%, rgba(147, 51, 234, 0.12) 0%, rgba(7, 9, 19, 0) 65%)'
     }}>
-      {/* Background Radial Glow */}
-      <div className="purple-halo" style={{ top: '15%', left: '20%' }} />
+      {/* Background Radial Glows */}
+      <div className="purple-halo" style={{ top: '10%', left: '15%' }} />
+      <div style={{
+        position: 'absolute',
+        bottom: '10%',
+        right: '10%',
+        width: 420,
+        height: 420,
+        background: 'radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 70%)',
+        filter: 'blur(60px)',
+        pointerEvents: 'none'
+      }} />
+
+      {/* Cyber Grid Lines (Subtle aesthetic backdrop) */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)',
+        backgroundSize: '60px 60px',
+        maskImage: 'radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.8) 20%, transparent 80%)',
+        WebkitMaskImage: 'radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.8) 20%, transparent 80%)',
+        pointerEvents: 'none'
+      }} />
 
       <div style={{
         maxWidth: 1280,
@@ -65,15 +87,15 @@ export const Hero = () => {
         display: 'grid',
         gridTemplateColumns: '1.05fr 1fr',
         alignItems: 'center',
-        gap: 40,
+        gap: 48,
         position: 'relative',
         zIndex: 10
       }} className="hero-grid">
 
-        {/* 3D AVATAR CANVAS CONTAINER (Matching the YouTube Short) */}
+        {/* 3D AVATAR CANVAS CONTAINER (Matching Approved Mockup) */}
         <div style={{
           position: 'relative',
-          height: 540,
+          height: 560,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
@@ -85,107 +107,135 @@ export const Hero = () => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 380,
-            height: 380,
+            width: 400,
+            height: 400,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, rgba(99, 102, 241, 0.15) 50%, transparent 75%)',
-            filter: 'blur(30px)',
+            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.38) 0%, rgba(99, 102, 241, 0.18) 50%, transparent 75%)',
+            filter: 'blur(35px)',
             pointerEvents: 'none'
           }} />
 
-          {/* Overhead Spotlight Beam graphic */}
+          {/* Overhead Spotlight Beam Graphic */}
           <div style={{
             position: 'absolute',
-            top: 0,
+            top: -20,
             left: '50%',
             transform: 'translateX(-50%)',
-            width: 280,
-            height: '100%',
-            background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 0%, transparent 80%)',
-            clipPath: 'polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%)',
+            width: 320,
+            height: '105%',
+            background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 0%, rgba(192, 132, 252, 0.06) 40%, transparent 85%)',
+            clipPath: 'polygon(38% 0%, 62% 0%, 100% 100%, 0% 100%)',
             pointerEvents: 'none'
           }} />
 
-          {/* Three.js Canvas Container */}
+          {/* Three.js Canvas */}
           <div ref={canvasRef} style={{
             width: '100%',
             height: '100%',
             cursor: 'grab'
-          }} />
+          }} title="Click avatar to interact!" />
 
           {/* Interactive Hint Badge */}
           <div style={{
             position: 'absolute',
-            bottom: 20,
+            bottom: 14,
             left: '50%',
             transform: 'translateX(-50%)',
-            background: 'rgba(15, 23, 42, 0.75)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(168, 85, 247, 0.3)',
-            borderRadius: 20,
-            padding: '6px 14px',
+            background: 'rgba(15, 23, 42, 0.82)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(168, 85, 247, 0.35)',
+            borderRadius: 30,
+            padding: '7px 18px',
             fontSize: 12,
-            color: '#c084fc',
+            color: '#d8b4fe',
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 8,
             pointerEvents: 'none',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
           }}>
             <Sparkles size={14} color="#a855f7" />
-            <span>Interactive 3D Avatar • Tracks Your Cursor</span>
+            <span>Interactive 3D Avatar • Tracks Cursor • Click to Greet</span>
           </div>
         </div>
 
         {/* HERO TYPOGRAPHY & CTAs */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {/* Status Chip */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '6px 14px',
-            background: 'rgba(34, 197, 94, 0.1)',
-            border: '1px solid rgba(34, 197, 94, 0.3)',
-            borderRadius: 20,
-            color: '#4ade80',
-            fontSize: 12,
-            fontWeight: 700,
-            width: 'fit-content'
-          }} className="font-heading">
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-            RESEARCH TRAINEE @ DRDO (CABS)
+          {/* Top Status & Role Pill Badges */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '6px 14px',
+              background: 'rgba(34, 197, 94, 0.12)',
+              border: '1px solid rgba(34, 197, 94, 0.35)',
+              borderRadius: 20,
+              color: '#4ade80',
+              fontSize: 12,
+              fontWeight: 700
+            }} className="font-heading">
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 10px #22c55e' }} />
+              AVAILABLE FOR 2026 ROLES
+            </div>
+
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '6px 14px',
+              background: 'rgba(168, 85, 247, 0.12)',
+              border: '1px solid rgba(168, 85, 247, 0.35)',
+              borderRadius: 20,
+              color: '#c084fc',
+              fontSize: 12,
+              fontWeight: 700
+            }} className="font-heading">
+              RESEARCH TRAINEE @ DRDO (CABS)
+            </div>
           </div>
 
           <div>
-            <div style={{ fontSize: 18, color: '#38bdf8', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 6 }} className="font-sub">
+            <div style={{
+              fontSize: 16,
+              color: '#38bdf8',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              marginBottom: 8,
+              textTransform: 'uppercase'
+            }} className="font-sub">
               HELLO WORLD, I'M
             </div>
+
+            {/* Glowing Main Name */}
             <h1 style={{
-              fontSize: 'clamp(38px, 5vw, 62px)',
+              fontSize: 'clamp(42px, 5.5vw, 68px)',
               fontWeight: 900,
               color: '#ffffff',
-              lineHeight: 1.1,
-              marginBottom: 14
+              lineHeight: 1.05,
+              marginBottom: 16,
+              textShadow: '0 0 40px rgba(168, 85, 247, 0.35)'
             }} className="font-heading">
               VAIBHAV KUNDU
             </h1>
 
             {/* Dynamic Typewriter Role */}
             <div style={{
-              fontSize: 'clamp(20px, 2.5vw, 28px)',
+              fontSize: 'clamp(20px, 2.6vw, 30px)',
               fontWeight: 700,
-              minHeight: 40,
+              minHeight: 42,
               display: 'flex',
               alignItems: 'center',
               color: '#cbd5e1'
             }} className="font-sub">
               <span>I am a&nbsp;</span>
               <span style={{
-                background: 'linear-gradient(135deg, #a855f7, #38bdf8)',
+                background: 'linear-gradient(135deg, #c084fc 0%, #38bdf8 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                fontWeight: 800
+                fontWeight: 800,
+                filter: 'drop-shadow(0 0 20px rgba(168, 85, 247, 0.4))'
               }}>
                 {currentText}
               </span>
@@ -196,33 +246,54 @@ export const Hero = () => {
           <p style={{
             fontSize: 16,
             color: '#94a3b8',
-            lineHeight: 1.7,
-            maxWidth: 520
+            lineHeight: 1.75,
+            maxWidth: 540
           }}>
-            Specializing in speech processing, tactical AI communications, and deep neural architectures.
-            Co-author of the <strong>IEEE SPACE 2026 Best Paper Award</strong> on AI voice deception in collaboration with DRDO.
+            Specializing in tactical speech processing, multi-speaker diarization (NVIDIA NeMo) and interactive 3D web applications.
+            Co-author of the <strong>IEEE SPACE 2026 Best Paper Award</strong> on tactical AI communications in collaboration with DRDO.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#64748b', fontSize: 13 }}>
-            <MapPin size={16} color="#a855f7" />
-            <span>Kolkata, India</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#64748b', fontSize: 13, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <MapPin size={16} color="#a855f7" />
+              <span>Kolkata, India</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#38bdf8', display: 'inline-block' }} />
+              <span style={{ color: '#94a3b8' }}>IEEE CIS Vice Chair • VP GNX</span>
+            </div>
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 10 }}>
+          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 12 }}>
             <a
               href={PORTFOLIO_DATA.resumePath}
               target="_blank"
               rel="noreferrer"
               className="btn-primary"
+              style={{
+                boxShadow: '0 8px 30px rgba(147, 51, 234, 0.45)',
+                padding: '14px 30px'
+              }}
             >
               <Download size={18} /> Download Resume
             </a>
             <a
+              href="#experience"
+              className="btn-secondary"
+              style={{ padding: '14px 26px' }}
+            >
+              Explore Research <ArrowRight size={18} />
+            </a>
+            <a
               href="#contact"
               className="btn-secondary"
+              style={{
+                padding: '14px 24px',
+                borderColor: 'rgba(168, 85, 247, 0.3)'
+              }}
             >
-              Get In Touch <ArrowRight size={18} />
+              Get In Touch
             </a>
           </div>
         </div>
@@ -243,7 +314,7 @@ export const Hero = () => {
             align-items: center;
           }
           .avatar-wrapper {
-            height: 420px !important;
+            height: 440px !important;
           }
         }
       `}</style>
