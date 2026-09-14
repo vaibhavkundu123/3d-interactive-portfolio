@@ -456,14 +456,15 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
           </div>
 
           <p style={{
-            fontSize: 16,
+            fontSize: 15,
             color: '#94a3b8',
             lineHeight: 1.75,
-            maxWidth: 540
+            maxWidth: 550
           }}>
-            Pioneering defense-grade speech processing and tactical AI systems at <strong>DRDO (Centre for Airborne Systems)</strong>.
-            Co-author of the <strong>IEEE SPACE 2026 Best Paper Award</strong> on AI-based voice deception for aerospace defense,
-            combining deep neural architectures (NVIDIA NeMo, PyTorch) with robust Linux systems engineering.
+            Final-year <strong>B.Tech in Computer Science & Engineering</strong> at <strong>Netaji Subhas Engineering College</strong>.
+            Currently a Research Trainee at <strong>DRDO (Centre for Airborne Systems)</strong> developing tactical speech diarization systems with NVIDIA NeMo,
+            with prior internships at <strong>Sasken Technologies</strong> and <strong>IEEE CIS</strong>.
+            Co-author & winner of the prestigious <strong>IEEE SPACE 2026 Best Paper Award</strong> for pioneering AI voice deception in aerospace and defense.
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#64748b', fontSize: 13, flexWrap: 'wrap' }}>
