@@ -51,19 +51,21 @@ export class VoiceIntroController {
       const voices = this.synth.getVoices();
       if (!voices || voices.length === 0) return;
 
-      // Priority ranking for the smoothest, most natural human voices
+      // Priority ranking for deep, smooth, masculine voices
       this.selectedVoice =
-        // 1. Google US English (Chromium's smoothest voice)
-        voices.find((v) => v.name === 'Google US English') ||
-        // 2. Google UK English Male
+        // 1. Google UK English Male (rich, deep baritone)
         voices.find((v) => v.name === 'Google UK English Male') ||
-        // 3. Online Natural / Neural voices
-        voices.find((v) => (v.name.includes('Natural') || v.name.includes('Neural')) && !v.name.includes('Female')) ||
-        // 4. Microsoft Mark (warmer and smoother than David)
+        // 2. Microsoft Mark (deepest native Windows US male voice)
         voices.find((v) => v.name.includes('Mark')) ||
-        // 5. Microsoft David
+        // 3. Google US English (deepened with pitch calibration)
+        voices.find((v) => v.name === 'Google US English') ||
+        // 4. Online Natural / Neural male voices
+        voices.find((v) => (v.name.includes('Natural') || v.name.includes('Neural')) && !v.name.includes('Female')) ||
+        // 5. Microsoft David (classic baritone)
         voices.find((v) => v.name.includes('David')) ||
-        // 6. Any other English US voice
+        // 6. Microsoft Ravi
+        voices.find((v) => v.name.includes('Ravi')) ||
+        // 7. Any other English US voice
         voices.find((v) => v.lang.startsWith('en-US') && !v.name.includes('Zira')) ||
         voices.find((v) => v.lang.startsWith('en')) ||
         voices[0] ||
@@ -76,7 +78,7 @@ export class VoiceIntroController {
     }
   }
 
-  // Futuristic audio entrance chime using Web Audio API
+  // Futuristic deep ambient audio entrance chime using Web Audio API
   playIntroChime() {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -91,15 +93,16 @@ export class VoiceIntroController {
       osc1.type = 'sine';
       osc2.type = 'triangle';
 
-      osc1.frequency.setValueAtTime(320, now);
-      osc1.frequency.exponentialRampToValueAtTime(640, now + 0.35);
-      osc1.frequency.exponentialRampToValueAtTime(880, now + 0.7);
+      // Deep cinematic chord
+      osc1.frequency.setValueAtTime(220, now);
+      osc1.frequency.exponentialRampToValueAtTime(440, now + 0.4);
+      osc1.frequency.exponentialRampToValueAtTime(660, now + 0.7);
 
-      osc2.frequency.setValueAtTime(640, now);
-      osc2.frequency.exponentialRampToValueAtTime(1280, now + 0.7);
+      osc2.frequency.setValueAtTime(440, now);
+      osc2.frequency.exponentialRampToValueAtTime(880, now + 0.7);
 
       gain.gain.setValueAtTime(0.01, now);
-      gain.gain.linearRampToValueAtTime(0.18, now + 0.1);
+      gain.gain.linearRampToValueAtTime(0.16, now + 0.1);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
       osc1.connect(gain);
@@ -145,9 +148,9 @@ export class VoiceIntroController {
       utterance.voice = this.selectedVoice;
     }
 
-    // Smooth, warm, natural delivery settings
-    utterance.rate = 0.96; // Fluid, articulate pace
-    utterance.pitch = 0.98; // Warm, natural resonance
+    // Deep, smooth, masculine resonance settings
+    utterance.rate = 0.95; // Relaxed, confident pace
+    utterance.pitch = 0.84; // Deeper baritone male resonance
 
     // Real-time boundary event listener to update subtitles on word/sentence boundaries
     utterance.onboundary = (event) => {
