@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Menu, X, Sparkles } from 'lucide-react';
+import { Download, Menu, X, Sparkles, Search } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
 
-export const Navbar = () => {
+export const Navbar = ({ onOpenCommandPalette }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -60,7 +60,7 @@ export const Navbar = () => {
         </a>
 
         {/* Desktop Links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }} className="desktop-nav">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }} className="desktop-nav">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -78,6 +78,49 @@ export const Navbar = () => {
               {link.name}
             </a>
           ))}
+
+          {/* Quick Command Palette Trigger Button */}
+          <button
+            onClick={onOpenCommandPalette}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '6px 12px',
+              borderRadius: 10,
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(168, 85, 247, 0.3)',
+              color: '#cbd5e1',
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              backdropFilter: 'blur(8px)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.6)';
+              e.currentTarget.style.background = 'rgba(56, 189, 248, 0.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(168, 85, 247, 0.3)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+            }}
+            title="Open Command Palette (Ctrl + K)"
+          >
+            <Search size={14} color="#38bdf8" />
+            <span style={{ color: '#94a3b8' }}>Search</span>
+            <kbd style={{
+              fontSize: 10,
+              fontWeight: 700,
+              padding: '2px 6px',
+              borderRadius: 5,
+              background: 'rgba(168, 85, 247, 0.15)',
+              border: '1px solid rgba(168, 85, 247, 0.35)',
+              color: '#d8b4fe'
+            }}>
+              Ctrl K
+            </kbd>
+          </button>
 
           <a
             href={PORTFOLIO_DATA.resumePath}
@@ -128,6 +171,30 @@ export const Navbar = () => {
               {link.name}
             </a>
           ))}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              onOpenCommandPalette?.();
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '10px 16px',
+              borderRadius: 12,
+              background: 'rgba(168, 85, 247, 0.15)',
+              border: '1px solid rgba(168, 85, 247, 0.4)',
+              color: '#ffffff',
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            <Search size={16} color="#38bdf8" />
+            <span>Search & Commands (Ctrl + K)</span>
+          </button>
+
           <a
             href={PORTFOLIO_DATA.resumePath}
             target="_blank"

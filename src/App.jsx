@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { SocialRail } from './components/SocialRail';
 import { Hero } from './components/Hero';
 import { IntroModal } from './components/IntroModal';
+import { CommandPalette } from './components/CommandPalette';
 import { AboutSection } from './components/AboutSection';
 import { SkillsSection } from './components/SkillsSection';
 import { ExperienceSection } from './components/ExperienceSection';
@@ -14,6 +15,19 @@ import './styles/index.css';
 
 export default function App() {
   const triggerVoiceIntroRef = useRef(null);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  // Global Ctrl + K / Cmd + K shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleStartIntroFromModal = () => {
     if (triggerVoiceIntroRef.current) {
@@ -26,8 +40,15 @@ export default function App() {
       {/* Welcome Playable Introduction Gate */}
       <IntroModal onStartIntro={handleStartIntroFromModal} />
 
+      {/* Cyber Command Palette (Ctrl + K) */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        onStartVoice={handleStartIntroFromModal}
+      />
+
       {/* Top Navbar */}
-      <Navbar />
+      <Navbar onOpenCommandPalette={() => setIsCommandPaletteOpen(true)} />
 
       {/* Left Social Rail */}
       <SocialRail />

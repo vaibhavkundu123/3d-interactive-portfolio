@@ -18,6 +18,12 @@ export const ChatBot = () => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener('open-sparky-chat', handleOpen);
+    return () => window.removeEventListener('open-sparky-chat', handleOpen);
+  }, []);
+
   const quickPrompts = [
     "Tell me about his DRDO research",
     "What models did he train?",
