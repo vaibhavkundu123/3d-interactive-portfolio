@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, ArrowRight, Sparkles, MapPin, Sparkle } from 'lucide-react';
+import { Download, ArrowRight, Sparkles, MapPin } from 'lucide-react';
 import { AvatarScene } from '../three/AvatarScene';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
 
@@ -11,13 +11,6 @@ export const Hero = () => {
   const [roleIndex, setRoleIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Interactive 3D Avatar state
-  const [targetMouse, setTargetMouse] = useState({ x: 0, y: 0 });
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-  const [isNodding, setIsNodding] = useState(false);
-  const [avatarVersion, setAvatarVersion] = useState('4k'); // '4k' or 'original'
 
   useEffect(() => {
     const roles = PORTFOLIO_DATA.taglines;
@@ -42,7 +35,7 @@ export const Hero = () => {
     return () => clearTimeout(timer);
   }, [currentText, isDeleting, roleIndex]);
 
-  // Mount Three.js Ambient Particle Scene
+  // Mount 3D Avatar Scene (Full 3D Character with dynamic head tracking)
   useEffect(() => {
     if (!canvasRef.current) return;
     const scene = new AvatarScene(canvasRef.current);
@@ -52,57 +45,6 @@ export const Hero = () => {
       scene.destroy();
     };
   }, []);
-
-  // Smooth Spring Mouse Tracking Loop for 3D Avatar
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      const nx = (e.clientX / window.innerWidth) * 2 - 1;
-      const ny = -(e.clientY / window.innerHeight) * 2 + 1;
-      setTargetMouse({ x: nx, y: ny });
-    };
-
-    const handleTouchMove = (e) => {
-      if (e.touches.length > 0) {
-        const touch = e.touches[0];
-        const nx = (touch.clientX / window.innerWidth) * 2 - 1;
-        const ny = -(touch.clientY / window.innerHeight) * 2 + 1;
-        setTargetMouse({ x: nx, y: ny });
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-
-    let animId;
-    const updatePhysics = () => {
-      setMouse((prev) => ({
-        x: prev.x + (targetMouse.x - prev.x) * 0.08,
-        y: prev.y + (targetMouse.y - prev.y) * 0.08
-      }));
-      animId = requestAnimationFrame(updatePhysics);
-    };
-    animId = requestAnimationFrame(updatePhysics);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
-      cancelAnimationFrame(animId);
-    };
-  }, [targetMouse]);
-
-  // Click Nod Interaction
-  const handleAvatarClick = () => {
-    if (!isNodding) {
-      setIsNodding(true);
-      setTimeout(() => setIsNodding(false), 600);
-    }
-  };
-
-  // 3D Tilt calculation
-  const rotY = mouse.x * 14; // Horizontal tilt
-  const rotX = -mouse.y * 10; // Vertical tilt
-  const sheenX = ((mouse.x + 1) / 2) * 100;
-  const sheenY = ((-mouse.y + 1) / 2) * 100;
 
   return (
     <section id="home" style={{
@@ -150,192 +92,88 @@ export const Hero = () => {
         zIndex: 10
       }} className="hero-grid">
 
-        {/* 3D AVATAR HERO CONTAINER (Clean, Artifact-Free & Interactive) */}
+        {/* 3D AVATAR HERO CONTAINER (Pure 3D Canvas with Real-time Head Tracking) */}
         <div style={{
           position: 'relative',
-          height: 560,
+          height: 580,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center'
         }} className="avatar-wrapper">
 
-          {/* Three.js Background Particle Stars Canvas */}
-          <div ref={canvasRef} style={{
+          {/* Background Ambient Spotlight Halo */}
+          <div style={{
             position: 'absolute',
-            inset: 0,
+            top: '48%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 440,
+            height: 440,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, rgba(99, 102, 241, 0.16) 50%, transparent 75%)',
+            filter: 'blur(45px)',
             pointerEvents: 'none',
             zIndex: 1
           }} />
 
-          {/* Background Ambient Spotlight Halo */}
+          {/* Overhead Volumetric Spotlight Gradient Beam */}
           <div style={{
             position: 'absolute',
-            top: '50%',
+            top: -20,
             left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 420,
-            height: 420,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(99, 102, 241, 0.18) 50%, transparent 75%)',
-            filter: 'blur(45px)',
-            pointerEvents: 'none',
-            zIndex: 2,
-            animation: 'haloPulse 4s ease-in-out infinite'
-          }} />
-
-          {/* Overhead Spotlight Beam Graphic (Soft Gaussian blurred gradient) */}
-          <div style={{
-            position: 'absolute',
-            top: -30,
-            left: '50%',
-            transform: `translateX(-50%) rotate(${mouse.x * 3.5}deg)`,
-            transformOrigin: 'top center',
+            transform: 'translateX(-50%)',
             width: 340,
-            height: '110%',
-            background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, rgba(192, 132, 252, 0.08) 45%, transparent 85%)',
+            height: '105%',
+            background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, rgba(192, 132, 252, 0.06) 45%, transparent 85%)',
             clipPath: 'polygon(36% 0%, 64% 0%, 100% 100%, 0% 100%)',
             filter: 'blur(8px)',
             pointerEvents: 'none',
-            zIndex: 3,
-            transition: 'transform 0.1s ease-out'
+            zIndex: 2
           }} />
 
-          {/* 3D Interactive Avatar Card */}
+          {/* Three.js 3D Avatar Canvas */}
           <div
-            onClick={handleAvatarClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            ref={canvasRef}
             style={{
+              width: '100%',
+              height: '100%',
+              cursor: 'grab',
               position: 'relative',
-              width: 340,
-              height: 450,
-              borderRadius: 28,
-              border: '2px solid rgba(168, 85, 247, 0.45)',
-              boxShadow: isHovered
-                ? '0 30px 70px rgba(0, 0, 0, 0.85), 0 0 50px rgba(168, 85, 247, 0.45)'
-                : '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(168, 85, 247, 0.25)',
-              overflow: 'hidden',
-              cursor: 'pointer',
-              zIndex: 4,
-              transform: `perspective(1000px) rotateX(${isNodding ? rotX + 10 : rotX}deg) rotateY(${rotY}deg) scale3d(${isHovered ? 1.03 : 1.0}, ${isHovered ? 1.03 : 1.0}, 1.0) translateY(${isNodding ? -8 : 0}px)`,
-              transition: isNodding ? 'transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'border-color 0.3s ease, box-shadow 0.3s ease',
-              willChange: 'transform'
+              zIndex: 3
             }}
-            title="Click avatar to interact!"
-          >
-            {/* The Exact Character Image */}
-            <img
-              src={avatarVersion === '4k' ? '/avatar.jpg' : '/avatar_original.png'}
-              alt="Vaibhav Kundu 3D Developer Avatar"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                display: 'block',
-                userSelect: 'none',
-                WebkitUserDrag: 'none'
-              }}
-            />
+            title="Move your mouse to watch the avatar turn its head! Click to greet."
+          />
 
-            {/* Dynamic Interactive Specular Sheen (Moves with cursor in real-time) */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: `radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.04) 35%, transparent 65%)`,
-              pointerEvents: 'none',
-              mixBlendMode: 'overlay'
-            }} />
-
-            {/* Subtle bottom gradient fade for seamless depth */}
-            <div style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 70,
-              background: 'linear-gradient(to top, rgba(5, 9, 19, 0.8) 0%, transparent 100%)',
-              pointerEvents: 'none'
-            }} />
-          </div>
-
-          {/* Interactive Hint Badge & Version Switcher */}
+          {/* Interactive Hint Badge */}
           <div style={{
+            position: 'absolute',
+            bottom: 12,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(15, 23, 42, 0.85)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(168, 85, 247, 0.35)',
+            borderRadius: 30,
+            padding: '7px 18px',
+            fontSize: 12,
+            color: '#d8b4fe',
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
-            marginTop: 18,
-            zIndex: 5,
-            flexWrap: 'wrap',
-            justifyContent: 'center'
+            gap: 8,
+            pointerEvents: 'none',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
+            zIndex: 4
           }}>
-            {/* Hint Badge */}
-            <div style={{
-              background: 'rgba(15, 23, 42, 0.85)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(168, 85, 247, 0.35)',
-              borderRadius: 30,
-              padding: '6px 16px',
-              fontSize: 12,
-              color: '#d8b4fe',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
-            }}>
-              <Sparkles size={14} color="#a855f7" />
-              <span>Interactive 3D Avatar • Tracks Cursor • Click to Greet</span>
-            </div>
-
-            {/* Version Toggle Pill */}
-            <div style={{
-              display: 'inline-flex',
-              background: 'rgba(15, 23, 42, 0.85)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 20,
-              padding: 2
-            }}>
-              <button
-                type="button"
-                onClick={() => setAvatarVersion('4k')}
-                style={{
-                  background: avatarVersion === '4k' ? 'rgba(168, 85, 247, 0.3)' : 'transparent',
-                  color: avatarVersion === '4k' ? '#f8fafc' : '#94a3b8',
-                  border: 'none',
-                  borderRadius: 16,
-                  padding: '4px 10px',
-                  fontSize: 11,
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                4K Cinematic
-              </button>
-              <button
-                type="button"
-                onClick={() => setAvatarVersion('original')}
-                style={{
-                  background: avatarVersion === 'original' ? 'rgba(168, 85, 247, 0.3)' : 'transparent',
-                  color: avatarVersion === 'original' ? '#f8fafc' : '#94a3b8',
-                  border: 'none',
-                  borderRadius: 16,
-                  padding: '4px 10px',
-                  fontSize: 11,
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Original
-              </button>
-            </div>
+            <Sparkles size={14} color="#a855f7" />
+            <span>3D Avatar • Moves Head to Follow Your Cursor • Click to Greet</span>
           </div>
         </div>
 
         {/* HERO TYPOGRAPHY & CTAs */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
 
           {/* Top Status & Role Pill Badges */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
