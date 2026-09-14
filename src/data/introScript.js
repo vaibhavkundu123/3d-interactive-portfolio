@@ -22,48 +22,36 @@ Outside of my academic projects, my proficiency in Linux environments is further
     },
     {
       id: 2,
-      text: "I have a strong technical foundation in Data Structures and Algorithms, Database Management Systems, and programming languages like Python, C, and Java,",
-      highlight: "DSA, DBMS & Python, C, Java",
+      text: "I have a strong technical foundation in Data Structures and Algorithms, Database Management Systems, and programming languages like Python, C, and Java, alongside a specialized focus on Machine Learning and Deep Learning.",
+      highlight: "DSA, DBMS & Python, C, Java • ML & Deep Learning",
       gesture: "talk"
     },
     {
       id: 3,
-      text: "alongside a specialized focus on Machine Learning and Deep Learning.",
-      highlight: "Machine Learning & Deep Learning",
+      text: "I recently completed my internship as a Research Trainee at DRDO.",
+      highlight: "Research Trainee at DRDO (CABS)",
       gesture: "talk"
     },
     {
       id: 4,
-      text: "I recently completed my internship as a Research Trainee at DRDO.",
-      highlight: "Research Trainee at DRDO",
-      gesture: "talk"
-    },
-    {
-      id: 5,
       text: "In this role, I developed a complex speaker diarization system for tactical communications using the NVIDIA NeMo framework and deep learning models like TitaNet and MSDD.",
       highlight: "NVIDIA NeMo • TitaNet & MSDD",
       gesture: "talk"
     },
     {
+      id: 5,
+      text: "Prior to DRDO, I also completed a research internship with the IEEE Computational Intelligence Society, where I conducted a comparative study on the performance of Convolutional Neural Networks versus Vision Transformers.",
+      highlight: "IEEE CIS • CNNs vs Vision Transformers",
+      gesture: "talk"
+    },
+    {
       id: 6,
-      text: "Prior to DRDO, I also completed a research internship with the IEEE Computational Intelligence Society,",
-      highlight: "IEEE Computational Intelligence Society",
-      gesture: "talk"
-    },
-    {
-      id: 7,
-      text: "where I conducted a comparative study on the performance of Convolutional Neural Networks versus Vision Transformers.",
-      highlight: "CNNs vs Vision Transformers",
-      gesture: "talk"
-    },
-    {
-      id: 8,
       text: "Outside of my academic projects, my proficiency in Linux environments is further strengthened by my role as the Vice President of GNX, our CSE department's official GNU/Linux and open-source community,",
       highlight: "Vice President of GNX (GNU/Linux)",
       gesture: "talk"
     },
     {
-      id: 9,
+      id: 7,
       text: "which has also helped me build strong leadership and team collaboration skills. Welcome to my interactive portfolio!",
       highlight: "Welcome to my portfolio!",
       gesture: "talk"
