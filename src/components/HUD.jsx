@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Compass, Gamepad2, Award, Zap, HelpCircle, X } from 'lucide-react';
+import {
+  Volume2, VolumeX, Compass, Car as CarIcon,
+  Award, Gauge, Sun, Sunset, Moon, HelpCircle, X, Megaphone
+} from 'lucide-react';
 import { sound } from '../three/SoundEngine';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
 
@@ -8,19 +11,22 @@ export const HUD = ({
   speed,
   cameraMode,
   setCameraMode,
+  timeOfDay,
+  onToggleTimeOfDay,
+  onHonk,
   nearbyStation,
   onOpenStation,
-  roverPosition,
-  roverRotation
+  carPosition,
+  carRotation
 }) => {
   const [muted, setMuted] = useState(false);
   const [showControls, setShowControls] = useState(false);
 
   const toggleAudio = () => {
-    const nextState = !muted;
-    setMuted(nextState);
-    sound.setMuted(nextState);
-    if (!nextState) {
+    const next = !muted;
+    setMuted(next);
+    sound.setMuted(next);
+    if (!next) {
       sound.ensureContext();
       sound.playUiClick();
     }
@@ -32,7 +38,7 @@ export const HUD = ({
     setCameraMode(nextMode);
   };
 
-  // Keyboard 'E' to open nearby station
+  // Keyboard 'E' for station, 'H' for horn
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.code === 'KeyE' && nearbyStation) {
@@ -60,8 +66,8 @@ export const HUD = ({
         flexWrap: 'wrap',
         gap: 12
       }}>
-        {/* Brand / Identity */}
-        <div className="glass-panel" style={{
+        {/* Brand / Profile Pill */}
+        <div className="arcade-panel" style={{
           padding: '8px 16px',
           display: 'flex',
           alignItems: 'center',
@@ -69,17 +75,17 @@ export const HUD = ({
           pointerEvents: 'auto'
         }}>
           <div style={{
-            width: 10,
-            height: 10,
+            width: 12,
+            height: 12,
             borderRadius: '50%',
-            background: '#00f5ff',
-            boxShadow: '0 0 10px #00f5ff'
-          }} className="animate-neon" />
+            background: '#22c55e',
+            boxShadow: '0 0 10px #22c55e'
+          }} />
           <div>
-            <div style={{ fontSize: 13, fontWeight: 800, color: '#ffffff', letterSpacing: '0.08em' }} className="font-orbitron">
+            <div style={{ fontSize: 16, fontWeight: 800, color: '#ffffff' }} className="font-heading">
               VAIBHAV KUNDU
             </div>
-            <div style={{ fontSize: 11, color: '#00f5ff', fontWeight: 600 }} className="font-tech">
+            <div style={{ fontSize: 12, color: '#38bdf8', fontWeight: 600 }}>
               DRDO RESEARCHER • IEEE BEST PAPER AWARDEE
             </div>
           </div>
@@ -87,46 +93,121 @@ export const HUD = ({
 
         {/* Center Stats Bar */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, pointerEvents: 'auto' }}>
-          {/* XP Score */}
-          <div className="glass-panel" style={{
+          {/* Star / XP Score */}
+          <div className="arcade-panel" style={{
             padding: '8px 14px',
             display: 'flex',
             alignItems: 'center',
             gap: 8,
             color: '#f59e0b'
           }}>
-            <Award size={16} />
-            <span style={{ fontSize: 13, fontWeight: 700 }} className="font-orbitron">
-              {score} <span style={{ fontSize: 10, color: '#94a3b8' }}>XP</span>
+            <Award size={18} />
+            <span style={{ fontSize: 15, fontWeight: 800 }} className="font-heading">
+              {score} <span style={{ fontSize: 11, color: '#94a3b8' }}>XP</span>
             </span>
           </div>
 
           {/* Speedometer */}
-          <div className="glass-panel" style={{
+          <div className="arcade-panel" style={{
             padding: '8px 14px',
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            color: '#00f5ff'
+            color: '#38bdf8'
           }}>
-            <Zap size={16} />
-            <span style={{ fontSize: 13, fontWeight: 700 }} className="font-orbitron">
-              {speedKph} <span style={{ fontSize: 10, color: '#94a3b8' }}>KM/H</span>
+            <Gauge size={18} />
+            <span style={{ fontSize: 15, fontWeight: 800 }} className="font-heading">
+              {speedKph} <span style={{ fontSize: 11, color: '#94a3b8' }}>KM/H</span>
             </span>
           </div>
         </div>
 
         {/* Action Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, pointerEvents: 'auto' }}>
+          {/* Horn Button */}
+          <button
+            onClick={() => {
+              sound.ensureContext();
+              if (onHonk) onHonk();
+            }}
+            title="Honk Horn (H)"
+            className="arcade-panel"
+            style={{
+              padding: '8px 14px',
+              color: '#facc15',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 700
+            }}
+          >
+            <Megaphone size={16} />
+            <span className="font-heading">HONK!</span>
+          </button>
+
+          {/* Time of Day Toggle */}
+          <button
+            onClick={() => {
+              sound.playUiClick();
+              if (onToggleTimeOfDay) onToggleTimeOfDay();
+            }}
+            title="Toggle Day / Sunset / Night"
+            className="arcade-panel"
+            style={{
+              padding: '8px 14px',
+              color: '#ffffff',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 700
+            }}
+          >
+            {timeOfDay === 'DAY' && <><Sun size={16} color="#facc15" /> <span>DAY</span></>}
+            {timeOfDay === 'SUNSET' && <><Sunset size={16} color="#fb923c" /> <span>SUNSET</span></>}
+            {timeOfDay === 'NIGHT' && <><Moon size={16} color="#38bdf8" /> <span>NIGHT</span></>}
+          </button>
+
+          {/* Mode Switch Button */}
+          <button
+            onClick={handleModeToggle}
+            title="Toggle Drive / Director Mode"
+            className="arcade-panel"
+            style={{
+              padding: '8px 14px',
+              color: '#ffffff',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 700
+            }}
+          >
+            {cameraMode === 'CHASE' ? (
+              <>
+                <CarIcon size={16} color="#22c55e" />
+                <span className="font-heading">DRIVE</span>
+              </>
+            ) : (
+              <>
+                <Compass size={16} color="#ec4899" />
+                <span className="font-heading">TOUR</span>
+              </>
+            )}
+          </button>
+
           {/* Audio Button */}
           <button
             onClick={toggleAudio}
             title={muted ? "Unmute Audio" : "Mute Audio"}
-            className="glass-panel"
+            className="arcade-panel"
             style={{
               padding: '10px',
-              color: muted ? '#94a3b8' : '#00f5ff',
-              border: '1px solid rgba(0,245,255,0.3)',
+              color: muted ? '#94a3b8' : '#38bdf8',
               cursor: 'pointer',
               display: 'flex'
             }}
@@ -134,45 +215,14 @@ export const HUD = ({
             {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
           </button>
 
-          {/* Mode Switch Button */}
-          <button
-            onClick={handleModeToggle}
-            title="Toggle Exploration Mode"
-            className="glass-panel"
-            style={{
-              padding: '8px 14px',
-              color: '#ffffff',
-              border: '1px solid rgba(0,245,255,0.4)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              fontSize: 12,
-              fontWeight: 700
-            }}
-          >
-            {cameraMode === 'CHASE' ? (
-              <>
-                <Gamepad2 size={16} color="#00f5ff" />
-                <span className="font-orbitron">ROAM MODE</span>
-              </>
-            ) : (
-              <>
-                <Compass size={16} color="#ec4899" />
-                <span className="font-orbitron">DIRECTOR TOUR</span>
-              </>
-            )}
-          </button>
-
-          {/* Controls Help */}
+          {/* Help Button */}
           <button
             onClick={() => setShowControls(!showControls)}
-            title="Flight Manual & Keybindings"
-            className="glass-panel"
+            title="Controls & Instructions"
+            className="arcade-panel"
             style={{
               padding: '10px',
               color: '#94a3b8',
-              border: '1px solid rgba(148,163,184,0.3)',
               cursor: 'pointer',
               display: 'flex'
             }}
@@ -186,7 +236,7 @@ export const HUD = ({
       {nearbyStation && (
         <div style={{
           position: 'absolute',
-          top: 90,
+          top: 85,
           left: '50%',
           transform: 'translateX(-50%)',
           pointerEvents: 'auto'
@@ -196,11 +246,11 @@ export const HUD = ({
               sound.playUiClick();
               onOpenStation(nearbyStation);
             }}
-            className="glass-panel animate-neon"
+            className="arcade-panel animate-bounce-slow"
             style={{
-              padding: '12px 24px',
+              padding: '12px 28px',
               border: `2px solid ${nearbyStation.color}`,
-              background: 'rgba(5, 8, 20, 0.9)',
+              background: 'rgba(15, 23, 42, 0.95)',
               cursor: 'pointer',
               textAlign: 'center',
               display: 'flex',
@@ -209,29 +259,29 @@ export const HUD = ({
               gap: 4
             }}
           >
-            <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }} className="font-tech">
-              PROXIMITY RADAR DETECTED
+            <div style={{ fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em' }} className="font-heading">
+              PARKED AT PAVILION
             </div>
-            <div style={{ fontSize: 16, fontWeight: 800, color: '#ffffff' }} className="font-orbitron">
+            <div style={{ fontSize: 18, fontWeight: 800, color: '#ffffff' }} className="font-heading">
               {nearbyStation.name} — <span style={{ color: nearbyStation.color }}>{nearbyStation.subtitle}</span>
             </div>
             <div style={{
               fontSize: 12,
               fontWeight: 700,
-              color: '#00f5ff',
-              background: 'rgba(0, 245, 255, 0.15)',
-              padding: '4px 12px',
-              borderRadius: 4,
+              color: '#ffffff',
+              background: nearbyStation.color,
+              padding: '4px 14px',
+              borderRadius: 20,
               marginTop: 4
-            }} className="font-orbitron">
-              PRESS [E] OR CLICK TO ACCESS TERMINAL
+            }} className="font-heading">
+              PRESS [E] OR TAP TO EXPLORE
             </div>
           </div>
         </div>
       )}
 
-      {/* Mini-Map Radar */}
-      <div className="glass-panel" style={{
+      {/* Mini-Map Island Radar */}
+      <div className="arcade-panel" style={{
         position: 'absolute',
         top: 80,
         right: 16,
@@ -240,37 +290,29 @@ export const HUD = ({
         borderRadius: '50%',
         padding: 0,
         overflow: 'hidden',
-        border: '2px solid rgba(0, 245, 255, 0.4)',
+        border: '3px solid rgba(255, 255, 255, 0.2)',
         pointerEvents: 'auto'
       }}>
-        {/* Radar Rings */}
+        {/* Island Base */}
         <div style={{
           position: 'absolute',
           inset: 0,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,245,255,0.08) 0%, rgba(5,8,20,0.85) 100%)'
-        }} />
-        <div style={{
-          position: 'absolute',
-          inset: 15,
-          borderRadius: '50%',
-          border: '1px dashed rgba(0,245,255,0.3)'
-        }} />
-        <div style={{
-          position: 'absolute',
-          inset: 40,
-          borderRadius: '50%',
-          border: '1px dashed rgba(0,245,255,0.2)'
+          background: 'radial-gradient(circle, #22c55e 50%, #15803d 75%, #0284c7 95%)'
         }} />
 
-        {/* Crosshairs */}
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(0,245,255,0.2)' }} />
-        <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, background: 'rgba(0,245,255,0.2)' }} />
+        {/* Road Track Overlay */}
+        <div style={{
+          position: 'absolute',
+          inset: 18,
+          borderRadius: '50%',
+          border: '6px solid rgba(51, 65, 85, 0.85)'
+        }} />
 
-        {/* Station Dots on Radar (Scaled from -70..70 map space) */}
+        {/* Station Pins */}
         {PORTFOLIO_DATA.stations.map((st) => {
-          const mapX = 70 + (st.position[0] / 75) * 55;
-          const mapY = 70 + (st.position[2] / 75) * 55;
+          const mapX = 70 + (st.position[0] / 75) * 45;
+          const mapY = 70 + (st.position[2] / 75) * 45;
           const isNearby = nearbyStation?.id === st.id;
 
           return (
@@ -280,13 +322,14 @@ export const HUD = ({
               title={st.name}
               style={{
                 position: 'absolute',
-                left: mapX - 4,
-                top: mapY - 4,
-                width: 8,
-                height: 8,
+                left: mapX - 5,
+                top: mapY - 5,
+                width: 10,
+                height: 10,
                 borderRadius: '50%',
                 backgroundColor: st.color,
-                boxShadow: isNearby ? `0 0 8px ${st.color}` : 'none',
+                border: '1.5px solid #ffffff',
+                boxShadow: isNearby ? `0 0 10px ${st.color}` : 'none',
                 transform: isNearby ? 'scale(1.4)' : 'scale(1)',
                 cursor: 'pointer'
               }}
@@ -294,31 +337,31 @@ export const HUD = ({
           );
         })}
 
-        {/* Rover Position Blip in Center with Rotation */}
+        {/* Car Dot with Direction Arrow */}
         <div style={{
           position: 'absolute',
-          left: 65,
-          top: 65,
-          width: 10,
-          height: 10,
+          left: 70 + ((carPosition?.x || 0) / 75) * 45 - 6,
+          top: 70 + ((carPosition?.z || 0) / 75) * 45 - 6,
+          width: 12,
+          height: 12,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          transform: `rotate(${-((roverRotation || 0) * 180 / Math.PI)}deg)`
+          transform: `rotate(${-((carRotation || 0) * 180 / Math.PI)}deg)`
         }}>
           <div style={{
             width: 0,
             height: 0,
             borderLeft: '4px solid transparent',
             borderRight: '4px solid transparent',
-            borderBottom: '9px solid #ffffff'
+            borderBottom: '10px solid #ef4444'
           }} />
         </div>
       </div>
 
-      {/* Flight Manual Dialog */}
+      {/* Controls Manual Dialog */}
       {showControls && (
-        <div className="glass-panel" style={{
+        <div className="arcade-panel" style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
@@ -330,7 +373,7 @@ export const HUD = ({
           zIndex: 50
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h3 style={{ fontSize: 16, color: '#00f5ff' }} className="font-orbitron">PILOT FLIGHT MANUAL</h3>
+            <h3 style={{ fontSize: 18, color: '#38bdf8' }} className="font-heading">CAR CONTROLS & MANUAL</h3>
             <button
               onClick={() => setShowControls(false)}
               style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
@@ -340,26 +383,34 @@ export const HUD = ({
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 13, marginBottom: 20 }}>
-            <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: 10, borderRadius: 8 }}>
-              <div style={{ color: '#00f5ff', fontWeight: 700 }}>W / Up Arrow</div>
-              <div style={{ color: '#94a3b8', fontSize: 12 }}>Accelerate Forward</div>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: 10, borderRadius: 10 }}>
+              <div style={{ color: '#38bdf8', fontWeight: 700 }}>W / Up Arrow</div>
+              <div style={{ color: '#94a3b8', fontSize: 12 }}>Accelerate</div>
             </div>
-            <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: 10, borderRadius: 8 }}>
-              <div style={{ color: '#00f5ff', fontWeight: 700 }}>S / Down Arrow</div>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: 10, borderRadius: 10 }}>
+              <div style={{ color: '#38bdf8', fontWeight: 700 }}>S / Down Arrow</div>
               <div style={{ color: '#94a3b8', fontSize: 12 }}>Brake / Reverse</div>
             </div>
-            <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: 10, borderRadius: 8 }}>
-              <div style={{ color: '#00f5ff', fontWeight: 700 }}>A / D or Left/Right</div>
-              <div style={{ color: '#94a3b8', fontSize: 12 }}>Steer Hovercraft</div>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: 10, borderRadius: 10 }}>
+              <div style={{ color: '#38bdf8', fontWeight: 700 }}>A / D or Left/Right</div>
+              <div style={{ color: '#94a3b8', fontSize: 12 }}>Steer Front Wheels</div>
             </div>
-            <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: 10, borderRadius: 8 }}>
-              <div style={{ color: '#00f5ff', fontWeight: 700 }}>Key 'E' or Tap</div>
-              <div style={{ color: '#94a3b8', fontSize: 12 }}>Access Station Terminal</div>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: 10, borderRadius: 10 }}>
+              <div style={{ color: '#facc15', fontWeight: 700 }}>Spacebar</div>
+              <div style={{ color: '#94a3b8', fontSize: 12 }}>Jump / Stunt</div>
+            </div>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: 10, borderRadius: 10 }}>
+              <div style={{ color: '#facc15', fontWeight: 700 }}>Key 'H'</div>
+              <div style={{ color: '#94a3b8', fontSize: 12 }}>Honk Horn!</div>
+            </div>
+            <div style={{ background: 'rgba(30, 41, 59, 0.7)', padding: 10, borderRadius: 10 }}>
+              <div style={{ color: '#22c55e', fontWeight: 700 }}>Key 'E' or Tap</div>
+              <div style={{ color: '#94a3b8', fontSize: 12 }}>Explore Pavilion</div>
             </div>
           </div>
 
-          <div style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.6, borderTop: '1px solid rgba(148,163,184,0.2)', paddingTop: 12 }}>
-            💡 <strong style={{ color: '#ffffff' }}>Director Tour:</strong> Click any station in the bottom dock to fly the camera directly there without driving. Collect glowing cubes around the world for bonus XP!
+          <div style={{ fontSize: 12, color: '#cbd5e1', lineHeight: 1.6, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 12 }}>
+            🏎️ <strong>Pro Tip:</strong> Speed over wooden ramps to jump! Bump into the 3D skill blocks at the Skills Pavilion to wobble them, and click any station in the bottom dock to auto-pilot the car!
           </div>
         </div>
       )}

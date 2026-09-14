@@ -17,7 +17,7 @@ const iconMap = {
 export const Navigation = ({ activeStationId, onSelectStation }) => {
   const handleClick = (station) => {
     sound.ensureContext();
-    sound.playTeleport();
+    sound.playJump();
     onSelectStation(station);
   };
 
@@ -32,13 +32,13 @@ export const Navigation = ({ activeStationId, onSelectStation }) => {
       overflowX: 'auto',
       pointerEvents: 'auto'
     }}>
-      <div className="glass-panel" style={{
+      <div className="arcade-panel" style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 6,
-        padding: '6px 10px',
-        borderRadius: 40,
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 245, 255, 0.2)'
+        gap: 8,
+        padding: '8px 12px',
+        borderRadius: 30,
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)'
       }}>
         {PORTFOLIO_DATA.stations.map((st) => {
           const IconComponent = iconMap[st.iconName] || User;
@@ -48,19 +48,19 @@ export const Navigation = ({ activeStationId, onSelectStation }) => {
             <button
               key={st.id}
               onClick={() => handleClick(st)}
-              className="cyber-btn-secondary"
+              className="arcade-btn-secondary"
               style={{
-                borderRadius: 24,
+                borderRadius: 20,
                 padding: '8px 16px',
-                border: isActive ? `1.5px solid ${st.color}` : '1px solid rgba(255, 255, 255, 0.1)',
-                background: isActive ? `${st.color}22` : 'rgba(15, 23, 42, 0.6)',
-                color: isActive ? '#ffffff' : '#94a3b8',
-                boxShadow: isActive ? `0 0 15px ${st.color}44` : 'none',
+                border: isActive ? `2px solid ${st.color}` : '1px solid rgba(255, 255, 255, 0.15)',
+                background: isActive ? `${st.color}33` : 'rgba(30, 41, 59, 0.7)',
+                color: isActive ? '#ffffff' : '#cbd5e1',
+                boxShadow: isActive ? `0 0 15px ${st.color}66` : 'none',
                 whiteSpace: 'nowrap'
               }}
             >
               <IconComponent size={16} color={isActive ? st.color : '#94a3b8'} />
-              <span className="font-orbitron" style={{ fontSize: 11, fontWeight: 700 }}>
+              <span className="font-heading" style={{ fontSize: 13, fontWeight: 700 }}>
                 {st.name}
               </span>
             </button>

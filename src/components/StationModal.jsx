@@ -3,8 +3,7 @@ import confetti from 'canvas-confetti';
 import {
   X, Download, Mail, Check, ExternalLink, MapPin,
   Trophy, Star, Briefcase, GraduationCap, BrainCircuit,
-  Terminal, Smartphone, Cpu, Sparkles, Send, Loader2,
-  FileText, Activity, ShieldCheck, UserCheck
+  Sparkles, Send, Loader2, FileText
 } from 'lucide-react';
 import { PORTFOLIO_DATA, PORTFOLIO_CONTEXT, FORMSPREE_ID, callGeminiAPI } from '../data/portfolioData';
 import { sound } from '../three/SoundEngine';
@@ -17,14 +16,13 @@ export const StationModal = ({ station, onClose }) => {
   const [isDrafting, setIsDrafting] = useState(false);
   const [showJdInput, setShowJdInput] = useState(false);
 
-  // Trigger celebration confetti when opening Trophy Vault
   useEffect(() => {
     if (station?.id === 'achievements') {
       confetti({
-        particleCount: 70,
+        particleCount: 80,
         spread: 80,
         origin: { y: 0.6 },
-        colors: ['#f59e0b', '#00f5ff', '#3b82f6', '#ffffff']
+        colors: ['#f59e0b', '#38bdf8', '#22c55e', '#ef4444', '#ffffff']
       });
     }
   }, [station]);
@@ -75,9 +73,9 @@ export const StationModal = ({ station, onClose }) => {
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(3, 5, 15, 0.85)',
-      backdropFilter: 'blur(12px)',
-      WebkitBackdropFilter: 'blur(12px)',
+      background: 'rgba(15, 23, 42, 0.75)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
       zIndex: 100,
       display: 'flex',
       alignItems: 'center',
@@ -86,41 +84,41 @@ export const StationModal = ({ station, onClose }) => {
       overflowY: 'auto'
     }}>
       <div
-        className={station.id === 'achievements' ? 'glass-panel-gold' : 'glass-panel'}
+        className={station.id === 'achievements' ? 'arcade-panel-gold' : 'arcade-panel'}
         style={{
           width: '100%',
-          maxWidth: 900,
+          maxWidth: 880,
           maxHeight: '88vh',
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
           overflow: 'hidden',
-          border: `1.5px solid ${station.color}`,
-          boxShadow: `0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px ${station.color}33`
+          border: `2px solid ${station.color}`,
+          boxShadow: `0 24px 60px rgba(0, 0, 0, 0.5), 0 0 25px ${station.color}44`
         }}
       >
         {/* Terminal Header */}
         <div style={{
           padding: '16px 24px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: 'rgba(5, 8, 20, 0.8)'
+          background: 'rgba(30, 41, 59, 0.9)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              width: 12,
-              height: 12,
+              width: 14,
+              height: 14,
               borderRadius: '50%',
               backgroundColor: station.color,
               boxShadow: `0 0 10px ${station.color}`
             }} />
             <div>
-              <div style={{ fontSize: 11, color: '#94a3b8', letterSpacing: '0.15em' }} className="font-tech">
-                ACCESSING SUBSPACE PROTOCOL // STATION: {station.id.toUpperCase()}
+              <div style={{ fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em' }} className="font-heading">
+                PAVILION STOP // {station.id.toUpperCase()}
               </div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: '#ffffff' }} className="font-orbitron">
+              <div style={{ fontSize: 20, fontWeight: 800, color: '#ffffff' }} className="font-heading">
                 {station.name} — <span style={{ color: station.color }}>{station.subtitle}</span>
               </div>
             </div>
@@ -131,7 +129,7 @@ export const StationModal = ({ station, onClose }) => {
               sound.playUiClick();
               onClose();
             }}
-            className="glass-panel"
+            className="arcade-panel"
             style={{
               padding: '8px',
               color: '#ffffff',
@@ -144,7 +142,7 @@ export const StationModal = ({ station, onClose }) => {
           </button>
         </div>
 
-        {/* Scrollable Content Body */}
+        {/* Scrollable Content */}
         <div style={{
           padding: '24px',
           overflowY: 'auto',
@@ -154,19 +152,17 @@ export const StationModal = ({ station, onClose }) => {
           gap: 24
         }}>
 
-          {/* ==================================================== */}
-          {/* STATION 1: ABOUT (COMMAND DECK) */}
-          {/* ==================================================== */}
+          {/* STATION 1: ABOUT */}
           {station.id === 'about' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'center' }}>
                 <div style={{
                   position: 'relative',
-                  width: 140,
-                  height: 140,
+                  width: 130,
+                  height: 130,
                   borderRadius: '50%',
                   padding: 4,
-                  background: 'linear-gradient(135deg, #00f5ff, #3b82f6)',
+                  background: 'linear-gradient(135deg, #38bdf8, #22c55e)',
                   flexShrink: 0
                 }}>
                   <img
@@ -179,21 +175,19 @@ export const StationModal = ({ station, onClose }) => {
                       objectFit: 'cover',
                       display: 'block'
                     }}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
+                    onError={(e) => { e.target.style.display = 'none'; }}
                   />
                 </div>
 
                 <div style={{ flex: 1, minWidth: 260 }}>
-                  <h2 style={{ fontSize: 28, fontWeight: 900, color: '#ffffff', marginBottom: 4 }} className="font-orbitron">
+                  <h2 style={{ fontSize: 28, fontWeight: 900, color: '#ffffff', marginBottom: 4 }} className="font-heading">
                     {PORTFOLIO_DATA.name}
                   </h2>
-                  <div style={{ fontSize: 16, color: '#00f5ff', fontWeight: 600, marginBottom: 8 }} className="font-tech">
+                  <div style={{ fontSize: 16, color: '#38bdf8', fontWeight: 600, marginBottom: 8 }}>
                     {PORTFOLIO_DATA.role}
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#94a3b8', fontSize: 13 }}>
-                    <MapPin size={15} color="#00f5ff" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#94a3b8', fontSize: 14 }}>
+                    <MapPin size={16} color="#38bdf8" />
                     <span>{PORTFOLIO_DATA.location}</span>
                   </div>
 
@@ -202,21 +196,21 @@ export const StationModal = ({ station, onClose }) => {
                       href={PORTFOLIO_DATA.resumePath}
                       target="_blank"
                       rel="noreferrer"
-                      className="cyber-btn"
+                      className="arcade-btn"
                       style={{ textDecoration: 'none' }}
                       onClick={() => sound.playUiClick()}
                     >
                       <Download size={16} /> Download Resume
                     </a>
-                    <button onClick={copyEmail} className="cyber-btn-secondary">
-                      {copied ? <Check size={16} color="#10b981" /> : <Mail size={16} />}
+                    <button onClick={copyEmail} className="arcade-btn-secondary">
+                      {copied ? <Check size={16} color="#22c55e" /> : <Mail size={16} />}
                       {copied ? 'Copied Email!' : 'Copy Email'}
                     </button>
                     <a
                       href={PORTFOLIO_DATA.linkedin}
                       target="_blank"
                       rel="noreferrer"
-                      className="cyber-btn-secondary"
+                      className="arcade-btn-secondary"
                       style={{ textDecoration: 'none' }}
                     >
                       LinkedIn <ExternalLink size={14} />
@@ -225,7 +219,7 @@ export const StationModal = ({ station, onClose }) => {
                       href={PORTFOLIO_DATA.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="cyber-btn-secondary"
+                      className="arcade-btn-secondary"
                       style={{ textDecoration: 'none' }}
                     >
                       GitHub <ExternalLink size={14} />
@@ -234,11 +228,10 @@ export const StationModal = ({ station, onClose }) => {
                 </div>
               </div>
 
-              {/* Bio Narrative */}
               <div style={{
-                background: 'rgba(15, 23, 42, 0.6)',
-                border: '1px solid rgba(0, 245, 255, 0.2)',
-                borderRadius: 12,
+                background: 'rgba(30, 41, 59, 0.7)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 14,
                 padding: '20px',
                 lineHeight: 1.8,
                 color: '#cbd5e1',
@@ -247,20 +240,19 @@ export const StationModal = ({ station, onClose }) => {
                 {PORTFOLIO_DATA.about}
               </div>
 
-              {/* Key Stats Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14 }}>
                 {PORTFOLIO_DATA.stats.map((stat, i) => (
                   <div key={i} style={{
-                    background: 'rgba(10, 15, 29, 0.7)',
-                    border: '1px solid rgba(148, 163, 184, 0.2)',
-                    borderRadius: 10,
+                    background: 'rgba(30, 41, 59, 0.6)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 12,
                     padding: '16px',
                     textAlign: 'center'
                   }}>
-                    <div style={{ fontSize: 11, color: '#94a3b8', letterSpacing: '0.1em' }} className="font-tech">
+                    <div style={{ fontSize: 12, color: '#94a3b8', letterSpacing: '0.08em' }} className="font-heading">
                       {stat.label.toUpperCase()}
                     </div>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: '#00f5ff', marginTop: 4 }} className="font-orbitron">
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#38bdf8', marginTop: 4 }} className="font-heading">
                       {stat.value}
                     </div>
                   </div>
@@ -269,39 +261,37 @@ export const StationModal = ({ station, onClose }) => {
             </div>
           )}
 
-          {/* ==================================================== */}
-          {/* STATION 2: SKILLS (NEURAL NEXUS) */}
-          {/* ==================================================== */}
+          {/* STATION 2: SKILLS */}
           {station.id === 'skills' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div style={{
-                background: 'rgba(59, 130, 246, 0.08)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
-                borderRadius: 10,
-                padding: '12px 16px',
+                background: 'rgba(56, 189, 248, 0.1)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: 12,
+                padding: '14px 18px',
                 fontSize: 14,
-                color: '#93c5fd'
+                color: '#7dd3fc'
               }}>
-                ⚡ Interactive Neural Matrix: Skill nodes are synchronized with modern ML architectures, speech processing frameworks, and full-stack software development.
+                🎯 <strong>Interactive Skills:</strong> Drive into the 3D domino blocks on the playground to wobble them! Here is Vaibhav's full technical toolkit across ML, frameworks, languages, and core computer science.
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
                 {PORTFOLIO_DATA.skills.map((group, idx) => (
                   <div key={idx} style={{
-                    background: 'rgba(15, 23, 42, 0.7)',
-                    border: `1px solid ${group.color}44`,
-                    borderRadius: 12,
+                    background: 'rgba(30, 41, 59, 0.7)',
+                    border: `1.5px solid ${group.color}44`,
+                    borderRadius: 14,
                     padding: 20
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                       <div style={{
-                        width: 8,
-                        height: 8,
+                        width: 10,
+                        height: 10,
                         borderRadius: '50%',
                         backgroundColor: group.color,
-                        boxShadow: `0 0 8px ${group.color}`
+                        boxShadow: `0 0 10px ${group.color}`
                       }} />
-                      <h3 style={{ fontSize: 16, fontWeight: 800, color: '#ffffff' }} className="font-orbitron">
+                      <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ffffff' }} className="font-heading">
                         {group.category}
                       </h3>
                     </div>
@@ -311,14 +301,13 @@ export const StationModal = ({ station, onClose }) => {
                         <span
                           key={i}
                           style={{
-                            background: 'rgba(30, 41, 59, 0.8)',
+                            background: 'rgba(15, 23, 42, 0.8)',
                             border: `1px solid ${group.color}33`,
                             color: '#e2e8f0',
                             fontSize: 13,
-                            padding: '5px 12px',
-                            borderRadius: 6,
-                            transition: 'all 0.2s ease',
-                            cursor: 'default'
+                            padding: '6px 12px',
+                            borderRadius: 8,
+                            fontWeight: 500
                           }}
                         >
                           {item}
@@ -331,16 +320,13 @@ export const StationModal = ({ station, onClose }) => {
             </div>
           )}
 
-          {/* ==================================================== */}
-          {/* STATION 3: EXPERIENCE (DEFENSE HANGAR) */}
-          {/* ==================================================== */}
+          {/* STATION 3: EXPERIENCE */}
           {station.id === 'experience' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              {/* DRDO Speech Processing Waveform Simulation Banner */}
               <div style={{
-                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 8, 20, 0.8))',
-                border: '1px solid rgba(16, 185, 129, 0.4)',
-                borderRadius: 12,
+                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(30, 41, 59, 0.7))',
+                border: '1px solid rgba(34, 197, 94, 0.35)',
+                borderRadius: 14,
                 padding: '16px 20px',
                 display: 'flex',
                 alignItems: 'center',
@@ -349,57 +335,55 @@ export const StationModal = ({ station, onClose }) => {
                 gap: 16
               }}>
                 <div>
-                  <div style={{ fontSize: 11, color: '#10b981', letterSpacing: '0.1em' }} className="font-tech">
-                    TACTICAL SPEECH ANALYSIS TELEMETRY
+                  <div style={{ fontSize: 12, color: '#22c55e', letterSpacing: '0.08em' }} className="font-heading">
+                    SPEECH PROCESSING & DEFENSE RADAR
                   </div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: '#ffffff' }} className="font-orbitron">
+                  <div style={{ fontSize: 18, fontWeight: 800, color: '#ffffff' }} className="font-heading">
                     NVIDIA NeMo • Titanet-L • MarbleNet • MSDD
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4, height: 28 }}>
-                  {[12, 24, 18, 28, 10, 26, 15, 22, 30, 14, 20].map((h, i) => (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, height: 26 }}>
+                  {[12, 22, 16, 26, 10, 24, 14, 20, 26, 12].map((h, i) => (
                     <div
                       key={i}
                       style={{
-                        width: 4,
+                        width: 5,
                         height: h,
-                        background: '#10b981',
-                        borderRadius: 2,
-                        animation: `badgeBounce 1.${i % 5 + 2}s infinite`
+                        background: '#22c55e',
+                        borderRadius: 3
                       }}
                     />
                   ))}
                 </div>
               </div>
 
-              {/* Experience Timeline */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {PORTFOLIO_DATA.experience.map((exp, idx) => (
                   <div key={idx} style={{
-                    background: 'rgba(15, 23, 42, 0.65)',
-                    border: '1px solid rgba(148, 163, 184, 0.2)',
-                    borderRadius: 12,
+                    background: 'rgba(30, 41, 59, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 14,
                     padding: 20
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
                       <div>
-                        <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ffffff' }} className="font-orbitron">
+                        <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ffffff' }} className="font-heading">
                           {exp.title}
                         </h3>
-                        <div style={{ fontSize: 14, color: '#10b981', fontWeight: 600 }}>
+                        <div style={{ fontSize: 14, color: '#22c55e', fontWeight: 600 }}>
                           {exp.company} — <span style={{ color: '#94a3b8' }}>{exp.location}</span>
                         </div>
                       </div>
                       <div style={{
-                        background: 'rgba(16, 185, 129, 0.1)',
-                        border: '1px solid rgba(16, 185, 129, 0.3)',
-                        color: '#10b981',
+                        background: 'rgba(34, 197, 94, 0.15)',
+                        border: '1px solid rgba(34, 197, 94, 0.3)',
+                        color: '#4ade80',
                         fontSize: 12,
-                        fontWeight: 600,
+                        fontWeight: 700,
                         padding: '4px 12px',
                         borderRadius: 20
-                      }} className="font-orbitron">
+                      }} className="font-heading">
                         {exp.period}
                       </div>
                     </div>
@@ -407,7 +391,7 @@ export const StationModal = ({ station, onClose }) => {
                     <ul style={{ listStyle: 'none', padding: 0, marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
                       {exp.description.map((desc, dIdx) => (
                         <li key={dIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, color: '#cbd5e1', fontSize: 14, lineHeight: 1.6 }}>
-                          <span style={{ color: '#10b981', marginTop: 2 }}>▹</span>
+                          <span style={{ color: '#22c55e', marginTop: 2 }}>▹</span>
                           <span>{desc}</span>
                         </li>
                       ))}
@@ -418,73 +402,69 @@ export const StationModal = ({ station, onClose }) => {
             </div>
           )}
 
-          {/* ==================================================== */}
-          {/* STATION 4: ACHIEVEMENTS (TROPHY VAULT) */}
-          {/* ==================================================== */}
+          {/* STATION 4: ACHIEVEMENTS */}
           {station.id === 'achievements' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {PORTFOLIO_DATA.achievements.map((ach, idx) => (
                 <div
                   key={idx}
                   style={{
-                    background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(15, 23, 42, 0.8))',
-                    border: '1.5px solid rgba(245, 158, 11, 0.5)',
-                    borderRadius: 16,
+                    background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(30, 41, 59, 0.85))',
+                    border: '2px solid rgba(245, 158, 11, 0.6)',
+                    borderRadius: 18,
                     padding: 24,
-                    boxShadow: '0 0 30px rgba(245, 158, 11, 0.15)'
+                    boxShadow: '0 8px 30px rgba(245, 158, 11, 0.2)'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
                     <div style={{
-                      padding: 12,
-                      borderRadius: 12,
-                      background: 'rgba(245, 158, 11, 0.2)',
-                      border: '1px solid #f59e0b',
+                      padding: 14,
+                      borderRadius: 14,
+                      background: 'rgba(245, 158, 11, 0.25)',
+                      border: '1.5px solid #f59e0b',
                       color: '#f59e0b'
                     }}>
-                      <Trophy size={32} />
+                      <Trophy size={36} />
                     </div>
                     <div>
                       <span style={{
                         background: 'rgba(245, 158, 11, 0.2)',
                         border: '1px solid #f59e0b',
                         color: '#fcd34d',
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: 700,
-                        padding: '3px 10px',
+                        padding: '4px 12px',
                         borderRadius: 20
-                      }} className="font-orbitron">
+                      }} className="font-heading">
                         {ach.badge}
                       </span>
-                      <h3 style={{ fontSize: 22, fontWeight: 900, color: '#ffffff', marginTop: 6 }} className="font-orbitron">
+                      <h3 style={{ fontSize: 24, fontWeight: 900, color: '#ffffff', marginTop: 6 }} className="font-heading">
                         {ach.title}
                       </h3>
-                      <div style={{ fontSize: 14, color: '#f59e0b', fontWeight: 600 }}>
+                      <div style={{ fontSize: 15, color: '#f59e0b', fontWeight: 600 }}>
                         {ach.conference}
                       </div>
                     </div>
                   </div>
 
-                  {/* Research Paper Banner */}
                   <div style={{
-                    background: 'rgba(5, 8, 20, 0.75)',
-                    border: '1px solid rgba(0, 245, 255, 0.3)',
-                    borderRadius: 10,
+                    background: 'rgba(15, 23, 42, 0.8)',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    borderRadius: 12,
                     padding: '16px',
                     marginBottom: 16
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#00f5ff', fontSize: 12, marginBottom: 6 }} className="font-tech">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#38bdf8', fontSize: 13, marginBottom: 6 }} className="font-heading">
                       <FileText size={16} /> CO-AUTHORED RESEARCH PAPER
                     </div>
-                    <div style={{ fontSize: 17, fontWeight: 800, color: '#ffffff' }}>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: '#ffffff' }}>
                       “{ach.paperTitle}”
                     </div>
                     <div style={{ fontSize: 13, color: '#94a3b8', marginTop: 6 }}>
-                      Collaboration: <strong style={{ color: '#00f5ff' }}>{ach.collaboration}</strong> • Track: <strong style={{ color: '#f59e0b' }}>{ach.track}</strong>
+                      Collaboration: <strong style={{ color: '#38bdf8' }}>{ach.collaboration}</strong> • Track: <strong style={{ color: '#f59e0b' }}>{ach.track}</strong>
                     </div>
                   </div>
 
-                  {/* Highlights */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {ach.highlights.map((hl, hIdx) => (
                       <div key={hIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, color: '#fef3c7', fontSize: 14 }}>
@@ -498,32 +478,30 @@ export const StationModal = ({ station, onClose }) => {
             </div>
           )}
 
-          {/* ==================================================== */}
-          {/* STATION 5: EDUCATION (CYBER ARCHIVES) */}
-          {/* ==================================================== */}
+          {/* STATION 5: EDUCATION */}
           {station.id === 'education' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {PORTFOLIO_DATA.education.map((edu, idx) => (
                 <div key={idx} style={{
-                  background: 'rgba(15, 23, 42, 0.7)',
+                  background: 'rgba(30, 41, 59, 0.7)',
                   border: '1px solid rgba(168, 85, 247, 0.35)',
-                  borderRadius: 12,
+                  borderRadius: 14,
                   padding: 20
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8, marginBottom: 6 }}>
                     <div>
                       <span style={{
-                        background: 'rgba(168, 85, 247, 0.15)',
+                        background: 'rgba(168, 85, 247, 0.2)',
                         border: '1px solid rgba(168, 85, 247, 0.4)',
-                        color: '#c084fc',
-                        fontSize: 11,
+                        color: '#d8b4fe',
+                        fontSize: 12,
                         fontWeight: 700,
-                        padding: '2px 8px',
-                        borderRadius: 12
-                      }} className="font-orbitron">
+                        padding: '3px 10px',
+                        borderRadius: 14
+                      }} className="font-heading">
                         {edu.badge}
                       </span>
-                      <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ffffff', marginTop: 6 }} className="font-orbitron">
+                      <h3 style={{ fontSize: 19, fontWeight: 800, color: '#ffffff', marginTop: 6 }} className="font-heading">
                         {edu.degree}
                       </h3>
                       <div style={{ fontSize: 14, color: '#c084fc', fontWeight: 600 }}>
@@ -531,14 +509,14 @@ export const StationModal = ({ station, onClose }) => {
                       </div>
                     </div>
                     <div style={{
-                      background: 'rgba(168, 85, 247, 0.1)',
+                      background: 'rgba(168, 85, 247, 0.15)',
                       border: '1px solid rgba(168, 85, 247, 0.3)',
                       color: '#e9d5ff',
-                      fontSize: 12,
-                      fontWeight: 600,
+                      fontSize: 13,
+                      fontWeight: 700,
                       padding: '4px 12px',
                       borderRadius: 20
-                    }} className="font-orbitron">
+                    }} className="font-heading">
                       {edu.period}
                     </div>
                   </div>
@@ -551,11 +529,11 @@ export const StationModal = ({ station, onClose }) => {
                     <div style={{
                       marginTop: 10,
                       paddingTop: 10,
-                      borderTop: '1px solid rgba(148, 163, 184, 0.15)',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
                       fontSize: 13,
                       color: '#cbd5e1'
                     }}>
-                      <strong style={{ color: '#00f5ff' }}>Role & Activities:</strong> {edu.extras}
+                      <strong style={{ color: '#38bdf8' }}>Role & Leadership:</strong> {edu.extras}
                     </div>
                   )}
                 </div>
@@ -563,60 +541,57 @@ export const StationModal = ({ station, onClose }) => {
             </div>
           )}
 
-          {/* ==================================================== */}
-          {/* STATION 6: CONTACT (QUANTUM RELAY) */}
-          {/* ==================================================== */}
+          {/* STATION 6: CONTACT */}
           {station.id === 'contact' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              {/* Quick Communication Channels */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
                 <div onClick={copyEmail} style={{
-                  background: 'rgba(15, 23, 42, 0.7)',
-                  border: '1px solid rgba(0, 245, 255, 0.3)',
-                  borderRadius: 10,
-                  padding: 14,
+                  background: 'rgba(30, 41, 59, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderRadius: 12,
+                  padding: 16,
                   textAlign: 'center',
                   cursor: 'pointer'
                 }}>
-                  <Mail size={22} color="#00f5ff" style={{ margin: '0 auto 6px' }} />
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#ffffff' }}>Email</div>
+                  <Mail size={24} color="#38bdf8" style={{ margin: '0 auto 6px' }} />
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff' }}>Email</div>
                   <div style={{ fontSize: 11, color: '#94a3b8', wordBreak: 'break-all' }}>{PORTFOLIO_DATA.email}</div>
                 </div>
 
                 <a href={PORTFOLIO_DATA.linkedin} target="_blank" rel="noreferrer" style={{
-                  background: 'rgba(15, 23, 42, 0.7)',
-                  border: '1px solid rgba(59, 130, 246, 0.3)',
-                  borderRadius: 10,
-                  padding: 14,
+                  background: 'rgba(30, 41, 59, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderRadius: 12,
+                  padding: 16,
                   textAlign: 'center',
                   textDecoration: 'none',
                   display: 'block'
                 }}>
-                  <ExternalLink size={22} color="#3b82f6" style={{ margin: '0 auto 6px' }} />
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#ffffff' }}>LinkedIn</div>
+                  <ExternalLink size={24} color="#38bdf8" style={{ margin: '0 auto 6px' }} />
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff' }}>LinkedIn</div>
                   <div style={{ fontSize: 11, color: '#94a3b8' }}>Connect on LinkedIn</div>
                 </a>
 
                 <a href={PORTFOLIO_DATA.github} target="_blank" rel="noreferrer" style={{
-                  background: 'rgba(15, 23, 42, 0.7)',
-                  border: '1px solid rgba(168, 85, 247, 0.3)',
-                  borderRadius: 10,
-                  padding: 14,
+                  background: 'rgba(30, 41, 59, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderRadius: 12,
+                  padding: 16,
                   textAlign: 'center',
                   textDecoration: 'none',
                   display: 'block'
                 }}>
-                  <ExternalLink size={22} color="#a855f7" style={{ margin: '0 auto 6px' }} />
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#ffffff' }}>GitHub</div>
+                  <ExternalLink size={24} color="#a855f7" style={{ margin: '0 auto 6px' }} />
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff' }}>GitHub</div>
                   <div style={{ fontSize: 11, color: '#94a3b8' }}>Code Repositories</div>
                 </a>
               </div>
 
               {/* Recruiter Auto-Pitch Tool */}
               <div style={{
-                background: 'rgba(0, 245, 255, 0.06)',
-                border: '1px solid rgba(0, 245, 255, 0.3)',
-                borderRadius: 10,
+                background: 'rgba(56, 189, 248, 0.08)',
+                border: '1.5px solid rgba(56, 189, 248, 0.35)',
+                borderRadius: 12,
                 padding: 16
               }}>
                 <button
@@ -625,15 +600,15 @@ export const StationModal = ({ station, onClose }) => {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#00f5ff',
-                    fontSize: 13,
+                    color: '#38bdf8',
+                    fontSize: 14,
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8
                   }}
-                  className="font-orbitron"
+                  className="font-heading"
                 >
                   <Sparkles size={16} /> RECRUITER? AUTO-DRAFT TAILORED PITCH FROM JD
                 </button>
@@ -644,15 +619,15 @@ export const StationModal = ({ station, onClose }) => {
                       rows={3}
                       value={jdText}
                       onChange={(e) => setJdText(e.target.value)}
-                      placeholder="Paste Job Description / Requirement here..."
+                      placeholder="Paste Job Description / Requirements here..."
                       style={{
                         width: '100%',
-                        background: 'rgba(5, 8, 20, 0.8)',
-                        border: '1px solid rgba(0, 245, 255, 0.3)',
-                        borderRadius: 8,
-                        padding: 10,
+                        background: 'rgba(15, 23, 42, 0.8)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: 10,
+                        padding: 12,
                         color: '#ffffff',
-                        fontSize: 13,
+                        fontSize: 14,
                         outline: 'none'
                       }}
                     />
@@ -660,36 +635,36 @@ export const StationModal = ({ station, onClose }) => {
                       type="button"
                       onClick={handleDraftPitch}
                       disabled={isDrafting}
-                      className="cyber-btn"
-                      style={{ alignSelf: 'flex-start', padding: '6px 14px', fontSize: 11 }}
+                      className="arcade-btn"
+                      style={{ alignSelf: 'flex-start', padding: '8px 16px', fontSize: 13 }}
                     >
-                      {isDrafting ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                      {isDrafting ? 'Synthesizing Pitch...' : 'Generate Tailored Pitch'}
+                      {isDrafting ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
+                      {isDrafting ? 'Synthesizing...' : 'Generate Pitch with Gemini'}
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* Subspace Transmission Form (Formspree) */}
+              {/* Contact Form */}
               {formStatus === 'SUCCESS' ? (
                 <div style={{
-                  background: 'rgba(16, 185, 129, 0.1)',
-                  border: '1px solid #10b981',
-                  borderRadius: 12,
+                  background: 'rgba(34, 197, 94, 0.15)',
+                  border: '1.5px solid #22c55e',
+                  borderRadius: 14,
                   padding: 24,
                   textAlign: 'center'
                 }}>
-                  <Check size={40} color="#10b981" style={{ margin: '0 auto 10px' }} />
-                  <h3 style={{ fontSize: 18, color: '#ffffff' }} className="font-orbitron">TRANSMISSION CONFIRMED</h3>
+                  <Check size={40} color="#22c55e" style={{ margin: '0 auto 10px' }} />
+                  <h3 style={{ fontSize: 20, color: '#ffffff' }} className="font-heading">MESSAGE DISPATCHED!</h3>
                   <p style={{ fontSize: 14, color: '#cbd5e1', marginTop: 6 }}>
-                    Thank you for reaching out! Vaibhav will inspect your transmission and respond shortly.
+                    Thank you! Vaibhav will review your note and respond as soon as possible.
                   </p>
                   <button
                     onClick={() => setFormStatus('IDLE')}
-                    className="cyber-btn-secondary"
+                    className="arcade-btn-secondary"
                     style={{ marginTop: 16 }}
                   >
-                    Send Another Transmission
+                    Send Another Note
                   </button>
                 </div>
               ) : (
@@ -700,11 +675,11 @@ export const StationModal = ({ station, onClose }) => {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Your Full Name / Organization"
+                      placeholder="Your Full Name / Company"
                       style={{
-                        background: 'rgba(15, 23, 42, 0.8)',
-                        border: '1px solid rgba(148, 163, 184, 0.3)',
-                        borderRadius: 8,
+                        background: 'rgba(30, 41, 59, 0.8)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: 10,
                         padding: '12px 16px',
                         color: '#ffffff',
                         fontSize: 14,
@@ -718,9 +693,9 @@ export const StationModal = ({ station, onClose }) => {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="Your Email Address"
                       style={{
-                        background: 'rgba(15, 23, 42, 0.8)',
-                        border: '1px solid rgba(148, 163, 184, 0.3)',
-                        borderRadius: 8,
+                        background: 'rgba(30, 41, 59, 0.8)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: 10,
                         padding: '12px 16px',
                         color: '#ffffff',
                         fontSize: 14,
@@ -734,12 +709,12 @@ export const StationModal = ({ station, onClose }) => {
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Enter message or project transmission..."
+                    placeholder="Type your message or inquiry..."
                     style={{
                       width: '100%',
-                      background: 'rgba(15, 23, 42, 0.8)',
-                      border: '1px solid rgba(148, 163, 184, 0.3)',
-                      borderRadius: 8,
+                      background: 'rgba(30, 41, 59, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: 10,
                       padding: '12px 16px',
                       color: '#ffffff',
                       fontSize: 14,
@@ -750,11 +725,11 @@ export const StationModal = ({ station, onClose }) => {
                   <button
                     type="submit"
                     disabled={formStatus === 'SENDING'}
-                    className="cyber-btn"
-                    style={{ padding: '14px', fontSize: 13 }}
+                    className="arcade-btn"
+                    style={{ padding: '14px', fontSize: 15 }}
                   >
-                    {formStatus === 'SENDING' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-                    {formStatus === 'SENDING' ? 'DISPATCHING TRANSMISSION...' : 'SEND SUBSPACE TRANSMISSION'}
+                    {formStatus === 'SENDING' ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+                    {formStatus === 'SENDING' ? 'Sending Message...' : 'Send Message'}
                   </button>
                 </form>
               )}

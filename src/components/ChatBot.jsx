@@ -8,7 +8,7 @@ export const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       role: 'bot',
-      text: `Greetings pilot! I'm NOVA ✨, Vaibhav's holographic AI co-pilot. Inquire about his research at DRDO, IEEE Best Paper award, deep learning models, or engineering experience!`
+      text: `Hello there! I'm Sparky ✨, Vaibhav's AI co-pilot. Feel free to ask about his DRDO CABS research, IEEE Best Paper award, speech AI models, or technical background!`
     }
   ]);
   const [input, setInput] = useState('');
@@ -35,11 +35,11 @@ export const ChatBot = () => {
     if (!queryText) setInput('');
     setIsTyping(true);
 
-    const systemInstruction = `You are NOVA, the high-tech holographic AI Assistant on Vaibhav Kundu's 3D Interactive Cyber Portfolio.
+    const systemInstruction = `You are Sparky, the friendly, highly knowledgeable AI Assistant on Vaibhav Kundu's 3D Interactive Portfolio.
 Represent Vaibhav Kundu accurately, professionally, and enthusiastically.
 Ground all your responses in this profile data:
 ${PORTFOLIO_CONTEXT}
-Keep answers crisp, technically accurate, and structured with concise bullet points if relevant. If asked for contact details, provide: ${PORTFOLIO_DATA.email} and phone ${PORTFOLIO_DATA.phone}.`;
+Keep answers crisp, technically accurate, and structured with concise bullet points if helpful. If asked for contact details, provide: ${PORTFOLIO_DATA.email} and phone ${PORTFOLIO_DATA.phone}.`;
 
     const reply = await callGeminiAPI(textToSend, systemInstruction);
     setMessages(prev => [...prev, { role: 'bot', text: reply }]);
@@ -50,7 +50,7 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
     <div style={{ position: 'fixed', bottom: 85, right: 20, zIndex: 90, pointerEvents: 'auto' }}>
       {isOpen && (
         <div
-          className="glass-panel"
+          className="arcade-panel"
           style={{
             width: 360,
             maxWidth: '92vw',
@@ -58,16 +58,16 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
             display: 'flex',
             flexDirection: 'column',
             marginBottom: 12,
-            border: '1px solid rgba(0, 245, 255, 0.4)',
-            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 245, 255, 0.2)',
+            border: '1.5px solid rgba(56, 189, 248, 0.4)',
+            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.5)',
             overflow: 'hidden'
           }}
         >
           {/* Header */}
           <div style={{
             padding: '12px 16px',
-            background: 'rgba(5, 8, 20, 0.9)',
-            borderBottom: '1px solid rgba(0, 245, 255, 0.2)',
+            background: 'rgba(30, 41, 59, 0.95)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
@@ -77,21 +77,20 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
                 width: 32,
                 height: 32,
                 borderRadius: '50%',
-                background: 'rgba(0, 245, 255, 0.2)',
-                border: '1px solid #00f5ff',
+                background: '#38bdf8',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#00f5ff'
+                color: '#0f172a'
               }}>
                 <Bot size={18} />
               </div>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: '#ffffff' }} className="font-orbitron">
-                  NOVA // AI CO-PILOT
+                <div style={{ fontSize: 15, fontWeight: 800, color: '#ffffff' }} className="font-heading">
+                  SPARKY // AI CO-PILOT
                 </div>
-                <div style={{ fontSize: 10, color: '#00f5ff' }} className="font-tech">
-                  GEMINI 2.5 NEURAL UPLINK ONLINE
+                <div style={{ fontSize: 11, color: '#38bdf8', fontWeight: 600 }}>
+                  POWERED BY GEMINI 2.5
                 </div>
               </div>
             </div>
@@ -107,7 +106,7 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
             </button>
           </div>
 
-          {/* Chat Messages */}
+          {/* Messages */}
           <div style={{
             flex: 1,
             padding: 14,
@@ -115,7 +114,7 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
             display: 'flex',
             flexDirection: 'column',
             gap: 12,
-            background: 'rgba(5, 8, 20, 0.4)'
+            background: 'rgba(15, 23, 42, 0.6)'
           }}>
             {messages.map((m, idx) => (
               <div
@@ -128,15 +127,15 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
                 <div
                   style={{
                     padding: '10px 14px',
-                    borderRadius: 12,
+                    borderRadius: 14,
                     fontSize: 13,
                     lineHeight: 1.5,
                     background: m.role === 'user'
-                      ? 'linear-gradient(135deg, #0284c7, #2563eb)'
-                      : 'rgba(15, 23, 42, 0.85)',
+                      ? 'linear-gradient(135deg, #2563eb, #38bdf8)'
+                      : 'rgba(30, 41, 59, 0.85)',
                     border: m.role === 'user'
-                      ? '1px solid #38bdf8'
-                      : '1px solid rgba(0, 245, 255, 0.25)',
+                      ? 'none'
+                      : '1px solid rgba(255, 255, 255, 0.1)',
                     color: '#ffffff',
                     whiteSpace: 'pre-wrap'
                   }}
@@ -152,26 +151,25 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
                   padding: '8px 14px',
                   borderRadius: 12,
                   fontSize: 12,
-                  background: 'rgba(15, 23, 42, 0.85)',
-                  border: '1px solid rgba(0, 245, 255, 0.25)',
-                  color: '#00f5ff',
+                  background: 'rgba(30, 41, 59, 0.85)',
+                  color: '#38bdf8',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 6
                 }}>
                   <Loader2 size={13} className="animate-spin" />
-                  <span>Synthesizing response...</span>
+                  <span>Sparky is thinking...</span>
                 </div>
               </div>
             )}
             <div ref={endRef} />
           </div>
 
-          {/* Quick Prompts Chips */}
+          {/* Quick Prompts */}
           <div style={{
             padding: '8px 12px',
-            background: 'rgba(5, 8, 20, 0.6)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+            background: 'rgba(15, 23, 42, 0.85)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             display: 'flex',
             gap: 6,
             overflowX: 'auto'
@@ -181,11 +179,11 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
                 key={i}
                 onClick={() => handleSend(qp)}
                 style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  border: '1px solid rgba(0, 245, 255, 0.2)',
+                  background: 'rgba(30, 41, 59, 0.8)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
                   borderRadius: 16,
                   padding: '4px 10px',
-                  color: '#94a3b8',
+                  color: '#cbd5e1',
                   fontSize: 11,
                   whiteSpace: 'nowrap',
                   cursor: 'pointer'
@@ -196,11 +194,11 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
             ))}
           </div>
 
-          {/* Input Bar */}
+          {/* Input */}
           <div style={{
             padding: '10px 12px',
-            background: 'rgba(5, 8, 20, 0.95)',
-            borderTop: '1px solid rgba(0, 245, 255, 0.2)',
+            background: 'rgba(30, 41, 59, 0.95)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
             display: 'flex',
             gap: 8
           }}>
@@ -209,11 +207,11 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask about Vaibhav's AI work..."
+              placeholder="Ask about Vaibhav's projects..."
               style={{
                 flex: 1,
                 background: 'rgba(15, 23, 42, 0.8)',
-                border: '1px solid rgba(148, 163, 184, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
                 borderRadius: 20,
                 padding: '8px 14px',
                 color: '#ffffff',
@@ -224,7 +222,7 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
             <button
               onClick={() => handleSend()}
               disabled={isTyping || !input.trim()}
-              className="cyber-btn"
+              className="arcade-btn"
               style={{ borderRadius: '50%', width: 36, height: 36, padding: 0 }}
             >
               <Send size={15} />
@@ -240,18 +238,18 @@ Keep answers crisp, technically accurate, and structured with concise bullet poi
           sound.playUiClick();
           setIsOpen(!isOpen);
         }}
-        className="cyber-btn"
+        className="arcade-btn"
         style={{
-          borderRadius: 30,
+          borderRadius: 25,
           padding: '10px 18px',
-          boxShadow: '0 0 25px rgba(0, 245, 255, 0.5)',
+          boxShadow: '0 6px 25px rgba(56, 189, 248, 0.4)',
           display: 'flex',
           alignItems: 'center',
           gap: 8
         }}
       >
         <Sparkles size={18} />
-        <span className="font-orbitron" style={{ fontSize: 12 }}>
+        <span className="font-heading" style={{ fontSize: 13 }}>
           {isOpen ? 'CLOSE AI' : 'AI CO-PILOT'}
         </span>
       </button>

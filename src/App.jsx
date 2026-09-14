@@ -6,7 +6,7 @@ import { StationModal } from './components/StationModal';
 import { ChatBot } from './components/ChatBot';
 import { VirtualJoystick } from './components/VirtualJoystick';
 import { sound } from './three/SoundEngine';
-import { Sparkles, Play, Compass } from 'lucide-react';
+import { Play, Compass, Car, Sparkles } from 'lucide-react';
 import './styles/index.css';
 
 export default function App() {
@@ -17,9 +17,10 @@ export default function App() {
   const [score, setScore] = useState(0);
   const [speed, setSpeed] = useState(0);
   const [cameraMode, setCameraMode] = useState('CHASE');
+  const [timeOfDay, setTimeOfDay] = useState('DAY');
   const [nearbyStation, setNearbyStation] = useState(null);
   const [modalStation, setModalStation] = useState(null);
-  const [roverState, setRoverState] = useState({ x: 0, z: 0, rot: 0 });
+  const [carState, setCarState] = useState({ x: 0, z: 0, rot: 0 });
   const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
@@ -39,11 +40,11 @@ export default function App() {
       },
       onSpeedUpdate: (curSpeed) => {
         setSpeed(curSpeed);
-        if (worldRef.current?.rover) {
-          setRoverState({
-            x: worldRef.current.rover.position.x,
-            z: worldRef.current.rover.position.z,
-            rot: worldRef.current.rover.rotationY
+        if (worldRef.current?.car) {
+          setCarState({
+            x: worldRef.current.car.position.x,
+            z: worldRef.current.car.position.z,
+            rot: worldRef.current.car.rotationY
           });
         }
       }
@@ -63,6 +64,18 @@ export default function App() {
     setHasStarted(true);
   };
 
+  const handleToggleTimeOfDay = () => {
+    const modes = ['DAY', 'SUNSET', 'NIGHT'];
+    const nextIdx = (modes.indexOf(timeOfDay) + 1) % modes.length;
+    const nextMode = modes[nextIdx];
+    setTimeOfDay(nextMode);
+    worldRef.current?.setTimeOfDay(nextMode);
+  };
+
+  const handleHonk = () => {
+    worldRef.current?.car?.honk();
+  };
+
   const handleSelectStation = (station) => {
     if (worldRef.current) {
       worldRef.current.teleportToStation(station);
@@ -80,96 +93,98 @@ export default function App() {
   };
 
   const handleJoystickMove = (x, y) => {
-    if (worldRef.current?.rover) {
-      worldRef.current.rover.setJoystickVector(x, y);
+    if (worldRef.current?.car) {
+      worldRef.current.car.setJoystickVector(x, y);
     }
   };
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      {/* Three.js Canvas Container */}
+      {/* 3D Canvas */}
       <div ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
 
-      {/* Retro Scanline Overlay */}
-      <div className="scanlines" />
-
-      {/* Intro Landing Splash overlay before flight starts */}
+      {/* Intro Welcome Screen */}
       {!hasStarted && (
         <div style={{
           position: 'fixed',
           inset: 0,
           zIndex: 150,
-          background: 'radial-gradient(circle at center, rgba(5,8,20,0.88) 0%, rgba(3,4,10,0.98) 100%)',
+          background: 'radial-gradient(circle at center, rgba(15,23,42,0.85) 0%, rgba(2,6,23,0.96) 100%)',
           backdropFilter: 'blur(16px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           padding: 24
         }}>
-          <div className="glass-panel" style={{
-            maxWidth: 580,
+          <div className="arcade-panel" style={{
+            maxWidth: 560,
             width: '100%',
             padding: '36px 32px',
             textAlign: 'center',
-            border: '2px solid rgba(0, 245, 255, 0.5)',
-            boxShadow: '0 0 50px rgba(0, 245, 255, 0.3)'
+            border: '2px solid rgba(56, 189, 248, 0.4)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6)'
           }}>
             <div style={{
-              width: 14,
-              height: 14,
+              width: 56,
+              height: 56,
               borderRadius: '50%',
-              background: '#00f5ff',
-              boxShadow: '0 0 15px #00f5ff',
-              margin: '0 auto 16px'
-            }} className="animate-neon" />
-
-            <div style={{ fontSize: 12, color: '#00f5ff', letterSpacing: '0.2em' }} className="font-tech">
-              INTERACTIVE 3D NEURAL FLIGHT PORTFOLIO
+              background: 'linear-gradient(135deg, #38bdf8, #22c55e)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+              boxShadow: '0 8px 24px rgba(56, 189, 248, 0.4)'
+            }}>
+              <Car size={28} color="#ffffff" />
             </div>
 
-            <h1 style={{ fontSize: 36, fontWeight: 900, color: '#ffffff', margin: '8px 0' }} className="font-orbitron">
+            <div style={{ fontSize: 13, color: '#38bdf8', letterSpacing: '0.12em', fontWeight: 700 }} className="font-heading">
+              3D ARCADE PLAYGROUND & PORTFOLIO
+            </div>
+
+            <h1 style={{ fontSize: 38, fontWeight: 900, color: '#ffffff', margin: '8px 0' }} className="font-heading">
               VAIBHAV KUNDU
             </h1>
 
-            <div style={{ fontSize: 16, color: '#94a3b8', marginBottom: 20 }} className="font-tech">
-              Machine Learning Researcher • DRDO (CABS) Trainee • IEEE Best Paper Awardee
+            <div style={{ fontSize: 16, color: '#94a3b8', marginBottom: 20 }}>
+              Machine Learning Researcher • DRDO (CABS) • IEEE Best Paper Awardee
             </div>
 
             <p style={{ fontSize: 14, color: '#cbd5e1', lineHeight: 1.7, marginBottom: 28 }}>
-              Take command of the cyber hovercraft to explore 3D research stations across DRDO speech AI,
-              deep learning architectures, IEEE SPACE 2026 accolades, academic credentials, and live communications uplink.
+              Take the arcade toy car for a spin around the 3D island! Jump off stunt ramps, knock into 3D skill blocks,
+              explore research pavilions, and toggle Day/Sunset/Night lighting.
             </p>
 
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
               <button
                 onClick={handleStartGame}
-                className="cyber-btn"
-                style={{ padding: '14px 32px', fontSize: 15 }}
+                className="arcade-btn"
+                style={{ padding: '14px 32px', fontSize: 16 }}
               >
-                <Play size={18} fill="#ffffff" /> LAUNCH 3D HOVERCRAFT
+                <Play size={18} fill="#ffffff" /> DRIVE THE CAR!
               </button>
 
               <button
                 onClick={() => {
                   handleStartGame();
-                  const firstStation = { id: 'about', name: 'Command Deck', subtitle: 'Identity & Bio Hologram', position: [0,0,0], color: '#00f5ff' };
+                  const firstStation = { id: 'about', name: 'Welcome Plaza', subtitle: 'Bio & Resume', position: [0,0,0], color: '#38bdf8' };
                   handleSelectStation(firstStation);
                 }}
-                className="cyber-btn-secondary"
-                style={{ padding: '14px 24px', fontSize: 14 }}
+                className="arcade-btn-secondary"
+                style={{ padding: '14px 24px', fontSize: 15 }}
               >
-                <Compass size={18} color="#00f5ff" /> DIRECTOR TOUR
+                <Compass size={18} color="#38bdf8" /> AUTOPILOT TOUR
               </button>
             </div>
 
-            <div style={{ marginTop: 24, fontSize: 12, color: '#64748b' }}>
-              Controls: WASD / Arrow Keys to drive • [E] or Click station to inspect • Audio enabled
+            <div style={{ marginTop: 24, fontSize: 12, color: '#94a3b8' }}>
+              Controls: WASD / Arrows to drive • Space to Jump • [H] to Honk • Audio Enabled
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Game In-Flight HUD */}
+      {/* Main Game HUD & Navigation */}
       {hasStarted && (
         <>
           <HUD
@@ -180,10 +195,13 @@ export default function App() {
               setCameraMode(mode);
               worldRef.current?.setCameraMode(mode);
             }}
+            timeOfDay={timeOfDay}
+            onToggleTimeOfDay={handleToggleTimeOfDay}
+            onHonk={handleHonk}
             nearbyStation={nearbyStation}
             onOpenStation={(st) => setModalStation(st)}
-            roverPosition={roverState}
-            roverRotation={roverState.rot}
+            carPosition={carState}
+            carRotation={carState.rot}
           />
 
           {/* Bottom Dock Navigation */}
@@ -192,13 +210,13 @@ export default function App() {
             onSelectStation={handleSelectStation}
           />
 
-          {/* Mobile Virtual Joystick */}
+          {/* Mobile Touch Joystick */}
           {isTouch && <VirtualJoystick onMove={handleJoystickMove} />}
 
-          {/* Floating AI Assistant */}
+          {/* Sparky AI Companion */}
           <ChatBot />
 
-          {/* Station Hologram Modal */}
+          {/* Station Detail Modal */}
           {modalStation && (
             <StationModal
               station={modalStation}
