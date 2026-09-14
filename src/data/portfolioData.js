@@ -145,8 +145,7 @@ export const PORTFOLIO_DATA = {
       location: "Kolkata, India",
       period: "2022",
       score: "Score: 70.4%",
-      badge: "CBSE XII",
-      extras: "Focused on Physics, Chemistry, Mathematics, and Computer Science"
+      badge: "CBSE XII"
     },
     {
       degree: "Class X (CBSE Secondary)",
@@ -154,8 +153,7 @@ export const PORTFOLIO_DATA = {
       location: "Kolkata, India",
       period: "2020",
       score: "Score: 90.8%",
-      badge: "CBSE X",
-      extras: "Graduated with Distinction honors"
+      badge: "CBSE X"
     }
   ],
 
