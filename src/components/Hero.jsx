@@ -81,8 +81,8 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
 
     if (onRegisterVoiceTrigger) {
       onRegisterVoiceTrigger(() => {
-        avatarSceneRef.current?.startSpeaking(INTRO_SCRIPT.phrases[0]?.gesture || 'nod');
         controller.start();
+        avatarSceneRef.current?.startSpeaking();
       });
     }
 
@@ -91,8 +91,17 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
     };
   }, [onRegisterVoiceTrigger]);
 
+  // Keep 3D Avatar Speaking & Reading state strictly synchronized with Voice Intro playback
+  useEffect(() => {
+    if (introState.isPlaying && !introState.isPaused) {
+      avatarSceneRef.current?.startSpeaking();
+    } else {
+      avatarSceneRef.current?.stopSpeaking();
+    }
+  }, [introState.isPlaying, introState.isPaused]);
+
   const handleStartVoice = () => {
-    avatarSceneRef.current?.startSpeaking(INTRO_SCRIPT.phrases[0]?.gesture || 'nod');
+    avatarSceneRef.current?.startSpeaking();
     voiceControllerRef.current?.start();
   };
 

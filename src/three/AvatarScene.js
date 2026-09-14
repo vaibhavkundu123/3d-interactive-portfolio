@@ -300,9 +300,10 @@ export class AvatarScene {
     this.camera.position.y += (targetCamY - this.camera.position.y) * 0.04;
 
     // Smooth transition between cursor tracking and reading mode
+    // When intro is speaking, mouse tracking is strictly 0.0 (completely disabled)
+    const mouseWeight = this.isSpeaking ? 0.0 : Math.max(0, 1.0 - this.readingWeight);
     const targetReadingWeight = this.isSpeaking ? 1.0 : 0.0;
-    this.readingWeight += (targetReadingWeight - this.readingWeight) * 0.06;
-    const mouseWeight = Math.max(0, 1.0 - this.readingWeight);
+    this.readingWeight += (targetReadingWeight - this.readingWeight) * 0.10;
 
     // Conversational micro-cadence
     let speechBob = 0;
@@ -312,40 +313,40 @@ export class AvatarScene {
       speechRoll = Math.cos(time * 1.4) * 0.004;
     }
 
-    // Reading motion simulation (natural left-to-right scanning across lines of script)
+    // Reading motion simulation (natural left-to-right scanning across subtitles card)
     let readYaw = 0;
     let readPitch = 0;
     let readEyeYaw = 0;
     let readEyePitch = 0;
 
     if (this.readingWeight > 0.01) {
-      // 1. Line scanning progress (each text line takes ~2.6 seconds to scan across)
+      // 1. Line scanning progress (~2.6s per subtitle line scan)
       const lineProg = (time * 0.38) % 1.0;
       let scanYaw = 0;
-      if (lineProg < 0.84) {
-        // Smooth scanning from left to right
-        const scanT = lineProg / 0.84;
-        scanYaw = -0.11 + scanT * 0.20;
+      if (lineProg < 0.82) {
+        // Smooth scanning from left to right across the subtitles
+        const scanT = lineProg / 0.82;
+        scanYaw = -0.16 + scanT * 0.32;
       } else {
-        // Natural quick return to start of next line (saccade)
-        const retT = (lineProg - 0.84) / 0.16;
-        scanYaw = 0.09 - retT * 0.20;
+        // Natural quick return saccade to start of next line
+        const retT = (lineProg - 0.82) / 0.18;
+        scanYaw = 0.16 - retT * 0.32;
       }
 
       // 2. Micro-saccades (subtle word-to-word reading jumps)
-      const microSaccade = Math.sin(time * 7.5) * 0.005;
+      const microSaccade = Math.sin(time * 7.8) * 0.007;
 
-      // 3. Periodic natural glance at audience (looks up briefly every ~6s)
-      const glanceWave = Math.sin(time * 0.4);
-      const isGlancingUp = glanceWave > 0.7 ? (glanceWave - 0.7) / 0.3 : 0;
+      // 3. Periodic natural glance at viewer (looks up briefly every ~7s to make direct eye contact)
+      const glanceWave = Math.sin(time * 0.42);
+      const isGlancingUp = glanceWave > 0.84 ? Math.sin(((glanceWave - 0.84) / 0.16) * Math.PI) : 0;
 
-      // 4. Downward tilt while reading lines, lifting up when connecting with viewer
-      const baseReadingPitch = 0.075; // Angled down toward subtitles
+      // 4. Clear downward tilt while reading lines (~11.5 deg), lifting up when connecting with viewer
+      const baseReadingPitch = 0.20; // Angled down directly toward subtitles card
       readPitch = (baseReadingPitch * (1 - isGlancingUp)) + speechBob;
-      readYaw = (scanYaw + microSaccade) * (1 - isGlancingUp * 0.7);
+      readYaw = (scanYaw + microSaccade) * (1 - isGlancingUp * 0.75);
 
-      readEyeYaw = readYaw * 0.85;
-      readEyePitch = readPitch * 0.9;
+      readEyeYaw = (scanYaw * 0.85) + microSaccade * 1.4;
+      readEyePitch = readPitch * 0.85;
     }
 
     // Subtle body yaw follows cursor only when not reading intro
@@ -372,8 +373,8 @@ export class AvatarScene {
       const mouseNeckYaw = this.mouse.x * 0.20;
       const mouseNeckPitch = -this.mouse.y * 0.12;
 
-      const finalNeckYaw = (mouseNeckYaw * mouseWeight) + (readYaw * 0.35 * this.readingWeight);
-      const finalNeckPitch = (mouseNeckPitch * mouseWeight) + (readPitch * 0.35 * this.readingWeight);
+      const finalNeckYaw = (mouseNeckYaw * mouseWeight) + (readYaw * 0.40 * this.readingWeight);
+      const finalNeckPitch = (mouseNeckPitch * mouseWeight) + (readPitch * 0.40 * this.readingWeight);
 
       this.neckBone.rotation.y = this.initialRotations.neck.y + finalNeckYaw;
       this.neckBone.rotation.x = this.initialRotations.neck.x + finalNeckPitch;
@@ -384,8 +385,8 @@ export class AvatarScene {
       const mouseEyeYaw = this.mouse.x * 0.12;
       const mouseEyePitch = -this.mouse.y * 0.10;
 
-      const finalEyeYaw = (mouseEyeYaw * mouseWeight) + (readEyeYaw * 0.65 * this.readingWeight);
-      const finalEyePitch = (mouseEyePitch * mouseWeight) + (readEyePitch * 0.65 * this.readingWeight);
+      const finalEyeYaw = (mouseEyeYaw * mouseWeight) + (readEyeYaw * this.readingWeight);
+      const finalEyePitch = (mouseEyePitch * mouseWeight) + (readEyePitch * this.readingWeight);
 
       this.leftEyeBone.rotation.y = this.initialRotations.leftEye.y + finalEyeYaw;
       this.leftEyeBone.rotation.x = this.initialRotations.leftEye.x + finalEyePitch;
@@ -394,8 +395,8 @@ export class AvatarScene {
       const mouseEyeYaw = this.mouse.x * 0.12;
       const mouseEyePitch = -this.mouse.y * 0.10;
 
-      const finalEyeYaw = (mouseEyeYaw * mouseWeight) + (readEyeYaw * 0.65 * this.readingWeight);
-      const finalEyePitch = (mouseEyePitch * mouseWeight) + (readEyePitch * 0.65 * this.readingWeight);
+      const finalEyeYaw = (mouseEyeYaw * mouseWeight) + (readEyeYaw * this.readingWeight);
+      const finalEyePitch = (mouseEyePitch * mouseWeight) + (readEyePitch * this.readingWeight);
 
       this.rightEyeBone.rotation.y = this.initialRotations.rightEye.y + finalEyeYaw;
       this.rightEyeBone.rotation.x = this.initialRotations.rightEye.x + finalEyePitch;

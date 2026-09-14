@@ -102,7 +102,18 @@ export class VoiceIntroController {
       return;
     }
 
-    this.stop();
+    if (this.fallbackTimer) {
+      clearTimeout(this.fallbackTimer);
+      this.fallbackTimer = null;
+    }
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = null;
+    }
+    if (this.synth) {
+      this.synth.cancel();
+    }
+
     this.playIntroChime();
     this.currentPhraseIndex = 0;
     this.isPlaying = true;
@@ -186,8 +197,11 @@ export class VoiceIntroController {
       };
 
       utterance.onerror = (e) => {
-        console.warn('Speech synthesis warning:', e);
-        advanceNext();
+        console.warn('Speech synthesis warning:', e?.error || e);
+        if (e?.error === 'interrupted' || e?.error === 'canceled') {
+          return;
+        }
+        // Let fallbackTimer manage natural reading duration instead of skipping instantly
       };
 
       this.currentUtterance = utterance;
