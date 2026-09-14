@@ -1,11 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, ArrowRight, Sparkles, MapPin } from 'lucide-react';
+import { Download, ArrowRight, Sparkles, MapPin, Play, Pause, X, Volume2 } from 'lucide-react';
 import { AvatarScene } from '../three/AvatarScene';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
+import { VoiceIntroController } from '../utils/VoiceIntroController';
+import { INTRO_SCRIPT } from '../data/introScript';
 
-export const Hero = () => {
+export const Hero = ({ onRegisterVoiceTrigger }) => {
   const canvasRef = useRef(null);
   const avatarSceneRef = useRef(null);
+  const voiceControllerRef = useRef(null);
+
+  // Spoken Voice Intro State
+  const [introState, setIntroState] = useState({
+    isPlaying: false,
+    isPaused: false,
+    currentPhrase: null,
+    currentPhraseIndex: 0,
+    totalPhrases: INTRO_SCRIPT.phrases.length,
+    progress: 0
+  });
 
   // Typewriter roles
   const [roleIndex, setRoleIndex] = useState(0);
@@ -45,6 +58,49 @@ export const Hero = () => {
       scene.destroy();
     };
   }, []);
+
+  // Initialize Voice Intro Controller
+  useEffect(() => {
+    const controller = new VoiceIntroController({
+      script: INTRO_SCRIPT,
+      onStateChange: (state) => {
+        setIntroState(state);
+      },
+      onPhraseChange: (index, phrase) => {
+        avatarSceneRef.current?.updateSpeechGesture(phrase.gesture);
+      },
+      onEnd: () => {
+        avatarSceneRef.current?.stopSpeaking();
+      }
+    });
+
+    voiceControllerRef.current = controller;
+
+    if (onRegisterVoiceTrigger) {
+      onRegisterVoiceTrigger(() => {
+        avatarSceneRef.current?.startSpeaking(INTRO_SCRIPT.phrases[0]?.gesture || 'nod');
+        controller.start();
+      });
+    }
+
+    return () => {
+      controller.stop();
+    };
+  }, [onRegisterVoiceTrigger]);
+
+  const handleStartVoice = () => {
+    avatarSceneRef.current?.startSpeaking(INTRO_SCRIPT.phrases[0]?.gesture || 'nod');
+    voiceControllerRef.current?.start();
+  };
+
+  const handleToggleVoice = () => {
+    voiceControllerRef.current?.togglePlayPause();
+  };
+
+  const handleStopVoice = () => {
+    voiceControllerRef.current?.stop();
+    avatarSceneRef.current?.stopSpeaking();
+  };
 
   return (
     <section id="home" style={{
@@ -130,30 +186,176 @@ export const Hero = () => {
             title="Move your mouse to watch the avatar turn its head! Click to greet."
           />
 
-          {/* Interactive Hint Badge */}
-          <div style={{
-            position: 'absolute',
-            bottom: 12,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(15, 23, 42, 0.85)',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(168, 85, 247, 0.35)',
-            borderRadius: 30,
-            padding: '7px 18px',
-            fontSize: 12,
-            color: '#d8b4fe',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            pointerEvents: 'none',
-            whiteSpace: 'nowrap',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
-            zIndex: 4
-          }}>
-            <Sparkles size={14} color="#a855f7" />
-            <span>3D Avatar • Moves Head to Follow Your Cursor • Click to Greet</span>
-          </div>
+          {/* Real-time Subtitle & Voice Player HUD or Hint Badge */}
+          {introState.isPlaying ? (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 8,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '94%',
+                maxWidth: 480,
+                background: 'rgba(11, 15, 30, 0.94)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(168, 85, 247, 0.55)',
+                borderRadius: 20,
+                padding: '14px 18px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+                boxShadow: '0 15px 35px rgba(0, 0, 0, 0.7), 0 0 30px rgba(168, 85, 247, 0.25)',
+                zIndex: 10,
+                animation: 'fadeIn 0.3s ease-out'
+              }}
+            >
+              {/* Header Bar with Equalizer, Status & Controls */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  {/* Equalizer bars */}
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 20 }}>
+                    <div className="soundwave-bar" />
+                    <div className="soundwave-bar" />
+                    <div className="soundwave-bar" />
+                    <div className="soundwave-bar" />
+                    <div className="soundwave-bar" />
+                  </div>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#c084fc', letterSpacing: '0.05em' }}>
+                    {introState.isPaused ? '⏸ PAUSED' : '● SPEAKING INTRO'}
+                  </span>
+                  <span style={{ fontSize: 11, color: '#64748b' }}>
+                    ({introState.currentPhraseIndex + 1}/{introState.totalPhrases})
+                  </span>
+                </div>
+
+                {/* Playback Controls */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <button
+                    onClick={handleToggleVoice}
+                    style={{
+                      background: 'rgba(168, 85, 247, 0.2)',
+                      border: '1px solid rgba(168, 85, 247, 0.4)',
+                      borderRadius: '50%',
+                      width: 28,
+                      height: 28,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#ffffff',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                    title={introState.isPaused ? 'Resume' : 'Pause'}
+                  >
+                    {introState.isPaused ? <Play size={12} fill="#ffffff" /> : <Pause size={12} fill="#ffffff" />}
+                  </button>
+
+                  <button
+                    onClick={handleStopVoice}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: '50%',
+                      width: 28,
+                      height: 28,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#94a3b8',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                    title="Close introduction"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Subtitle Caption */}
+              <div style={{ fontSize: 13, color: '#f8fafc', lineHeight: 1.5, minHeight: 38 }}>
+                {introState.currentPhrase?.text}
+              </div>
+
+              {/* Highlight Tag */}
+              {introState.currentPhrase?.highlight && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    padding: '3px 10px',
+                    borderRadius: 12,
+                    background: 'rgba(168, 85, 247, 0.2)',
+                    color: '#d8b4fe',
+                    border: '1px solid rgba(168, 85, 247, 0.3)'
+                  }}>
+                    ✨ {introState.currentPhrase.highlight}
+                  </span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{
+              position: 'absolute',
+              bottom: 12,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+              zIndex: 4,
+              width: 'max-content'
+            }}>
+              {/* Play Introduction Button */}
+              <button
+                onClick={handleStartVoice}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '8px 20px',
+                  borderRadius: 24,
+                  background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%)',
+                  border: '1px solid rgba(192, 132, 252, 0.5)',
+                  color: '#ffffff',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: '0 8px 20px rgba(147, 51, 234, 0.45)',
+                  transition: 'all 0.2s ease',
+                  backdropFilter: 'blur(8px)'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.04)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                title="Play speech introduction with 3D avatar voiceover"
+              >
+                <Volume2 size={15} />
+                <span>Play Voice Introduction</span>
+                <Play size={12} fill="#ffffff" />
+              </button>
+
+              {/* Cursor Tracking Hint */}
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.85)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(168, 85, 247, 0.35)',
+                borderRadius: 30,
+                padding: '5px 14px',
+                fontSize: 11,
+                color: '#d8b4fe',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                pointerEvents: 'none',
+                boxShadow: '0 6px 18px rgba(0, 0, 0, 0.4)'
+              }}>
+                <Sparkles size={12} color="#a855f7" />
+                <span>3D Avatar • Tracks Cursor • Click to Greet</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* HERO TYPOGRAPHY & CTAs */}

@@ -25,6 +25,8 @@ export class AvatarScene {
     // Animation state
     this.isNodding = false;
     this.nodProgress = 0;
+    this.isSpeaking = false;
+    this.speechGesture = null;
 
     // Background cosmic particles
     this.dustParticles = null;
@@ -256,6 +258,28 @@ export class AvatarScene {
     this.renderer.setSize(width, height);
   }
 
+  startSpeaking(gesture = 'talk') {
+    this.isSpeaking = true;
+    this.speechGesture = gesture;
+    if (gesture === 'nod' && !this.isNodding) {
+      this.isNodding = true;
+      this.nodProgress = 0;
+    }
+  }
+
+  updateSpeechGesture(gesture) {
+    this.speechGesture = gesture;
+    if (gesture === 'nod' && !this.isNodding) {
+      this.isNodding = true;
+      this.nodProgress = 0;
+    }
+  }
+
+  stopSpeaking() {
+    this.isSpeaking = false;
+    this.speechGesture = null;
+  }
+
   animate() {
     this.animId = requestAnimationFrame(this.animate.bind(this));
 
@@ -276,14 +300,33 @@ export class AvatarScene {
       }
     }
 
+    // Dynamic camera dolly-in during introduction speech
+    const targetCamZ = this.isSpeaking ? 1.22 : 1.38;
+    const targetCamY = this.isSpeaking ? 0.38 : 0.36;
+    this.camera.position.z += (targetCamZ - this.camera.position.z) * 0.04;
+    this.camera.position.y += (targetCamY - this.camera.position.y) * 0.04;
+
+    // Speaking rhythm & conversational gesture
+    let speechBob = 0;
+    let speechRoll = 0;
+    if (this.isSpeaking) {
+      speechBob = Math.sin(time * 3.8) * 0.022 + Math.sin(time * 1.6) * 0.012;
+      speechRoll = Math.cos(time * 2.4) * 0.012;
+    }
+
+    // Subtle body yaw follows cursor
+    if (this.model) {
+      this.model.rotation.y = this.mouse.x * 0.12;
+    }
+
     // 1. NATURAL HEAD TRACKING (Standard Three.js RPM coordinate frame)
     // - Y-axis: Yaw (horizontal turn left/right)
     // - X-axis: Pitch (vertical tilt up/down)
     // - Z-axis: Roll (subtle tilt)
     if (this.headBone && this.initialRotations.head) {
-      const headYaw = this.mouse.x * 0.45;    // Right when mouse is right, left when left
-      const headPitch = -this.mouse.y * 0.28 + nodOffset; // Up when mouse is up, down when down
-      const headRoll = -this.mouse.x * 0.06;
+      const headYaw = this.mouse.x * 0.45; // Right when mouse is right, left when left
+      const headPitch = -this.mouse.y * 0.28 + nodOffset + speechBob; // Up when mouse is up, down when down
+      const headRoll = -this.mouse.x * 0.06 + speechRoll;
 
       this.headBone.rotation.y = this.initialRotations.head.y + headYaw;
       this.headBone.rotation.x = this.initialRotations.head.x + headPitch;
@@ -292,7 +335,7 @@ export class AvatarScene {
 
     if (this.neckBone && this.initialRotations.neck) {
       const neckYaw = this.mouse.x * 0.20;
-      const neckPitch = -this.mouse.y * 0.12;
+      const neckPitch = -this.mouse.y * 0.12 + speechBob * 0.5;
 
       this.neckBone.rotation.y = this.initialRotations.neck.y + neckYaw;
       this.neckBone.rotation.x = this.initialRotations.neck.x + neckPitch;
@@ -310,7 +353,9 @@ export class AvatarScene {
 
     // 3. SUBTLE NATURAL BREATHING (Torso remains anchored)
     if (this.spineBone && this.initialRotations.spine) {
-      this.spineBone.rotation.x = this.initialRotations.spine.x + Math.sin(time * 2.0) * 0.015;
+      const breathRate = this.isSpeaking ? 3.0 : 2.0;
+      const breathAmp = this.isSpeaking ? 0.022 : 0.015;
+      this.spineBone.rotation.x = this.initialRotations.spine.x + Math.sin(time * breathRate) * breathAmp;
     }
 
     // 4. Overhead Spotlight subtle tracking for dynamic highlights

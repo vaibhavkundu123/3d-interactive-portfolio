@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Navbar } from './components/Navbar';
 import { SocialRail } from './components/SocialRail';
 import { Hero } from './components/Hero';
+import { IntroModal } from './components/IntroModal';
 import { AboutSection } from './components/AboutSection';
 import { SkillsSection } from './components/SkillsSection';
 import { ExperienceSection } from './components/ExperienceSection';
@@ -12,8 +13,19 @@ import { ChatBot } from './components/ChatBot';
 import './styles/index.css';
 
 export default function App() {
+  const triggerVoiceIntroRef = useRef(null);
+
+  const handleStartIntroFromModal = () => {
+    if (triggerVoiceIntroRef.current) {
+      triggerVoiceIntroRef.current();
+    }
+  };
+
   return (
     <div style={{ position: 'relative', width: '100%', minHeight: '100vh', backgroundColor: '#070913' }}>
+      {/* Welcome Playable Introduction Gate */}
+      <IntroModal onStartIntro={handleStartIntroFromModal} />
+
       {/* Top Navbar */}
       <Navbar />
 
@@ -22,7 +34,7 @@ export default function App() {
 
       {/* Main Content Flow */}
       <main>
-        <Hero />
+        <Hero onRegisterVoiceTrigger={(fn) => { triggerVoiceIntroRef.current = fn; }} />
         <AboutSection />
         <SkillsSection />
         <ExperienceSection />
