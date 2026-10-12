@@ -150,9 +150,9 @@ export const IntroModal = ({ onStartIntro, onDismiss }) => {
 
         {/* Highlight Pills */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <span style={pillStyle}>🎓 NSEC Kolkata (B.Tech CSE)</span>
+          <span style={pillStyle}>🎓 NSEC Kolkata (B.Tech CSE • CGPA 7.57)</span>
           <span style={pillStyle}>🛡️ DRDO CABS Research Trainee</span>
-          <span style={pillStyle}>🏆 IEEE Best Paper Awardee</span>
+          <span style={pillStyle}>🏆 2x Best Paper Awardee (Springer & IEEE)</span>
           <span style={pillStyle}>🐧 Vice President @ GNX (Linux)</span>
         </div>
 

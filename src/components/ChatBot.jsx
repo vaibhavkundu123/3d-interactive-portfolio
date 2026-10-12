@@ -7,7 +7,7 @@ export const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       role: 'bot',
-      text: `Hello! I'm Sparky ✨, Vaibhav's AI Co-Pilot. Ask me about his DRDO CABS speech processing research, IEEE Best Paper award, deep learning models, or tech background!`
+      text: `Hello! I'm Sparky ✨, Vaibhav's AI Co-Pilot. Ask me about his DRDO CABS speech processing research, 2x Best Paper awards (ICDMIS Springer & IEEE SPACE), deep learning models, or tech background!`
     }
   ]);
   const [input, setInput] = useState('');
@@ -27,8 +27,8 @@ export const ChatBot = () => {
   const quickPrompts = [
     "Tell me about his DRDO research",
     "What models did he train?",
-    "Explain the IEEE SPACE 2026 Best Paper",
-    "What are his core technical skills?"
+    "Explain his 2x Best Paper awards",
+    "What are his major projects & skills?"
   ];
 
   const handleSend = async (queryText) => {

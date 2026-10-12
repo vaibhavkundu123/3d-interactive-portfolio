@@ -99,12 +99,25 @@ export const CommandPalette = ({ isOpen, onClose, onStartVoice }) => {
       }
     },
     {
+      id: 'icdmis-best-paper',
+      category: 'RESEARCH & HONORS',
+      title: 'ICDMIS 2026 Best Paper Award (Springer)',
+      subtitle: 'Forensic DocStitch: Vision-Language Reconstruction for Cyber Forensics',
+      icon: Award,
+      badge: 'Springer Best Paper',
+      keywords: 'icdmis springer paper award best paper docstitch forensics cyber vision language reconstruction',
+      action: () => {
+        onClose();
+        scrollToSection('#awards');
+      }
+    },
+    {
       id: 'ieee-best-paper',
       category: 'RESEARCH & HONORS',
       title: 'IEEE SPACE 2026 Best Paper Award',
       subtitle: 'AI-Based Voice Deception System for Aerospace & Defense',
       icon: Award,
-      badge: 'Award Winner',
+      badge: 'IEEE Best Paper',
       keywords: 'ieee space paper award best paper voice deception aerospace conference',
       action: () => {
         onClose();
@@ -122,6 +135,34 @@ export const CommandPalette = ({ isOpen, onClose, onStartVoice }) => {
       action: () => {
         onClose();
         scrollToSection('#experience');
+      }
+    },
+
+    // MAJOR PROJECTS
+    {
+      id: 'project-docstitch',
+      category: 'MAJOR PROJECTS',
+      title: 'Forensic DocStitch (Vision-Language AI)',
+      subtitle: 'Final Year Project • Won Best Paper Award at ICDMIS 2026 (Springer)',
+      icon: Code,
+      badge: 'Project',
+      keywords: 'forensic docstitch project vision language cyber forensics deep learning python opencv springer',
+      action: () => {
+        onClose();
+        scrollToSection('#awards');
+      }
+    },
+    {
+      id: 'project-voice-deception',
+      category: 'MAJOR PROJECTS',
+      title: 'AI-Based Voice Deception System',
+      subtitle: 'DRDO CABS Research Project • Won Best Paper Award at IEEE SPACE 2026',
+      icon: Shield,
+      badge: 'Defense Project',
+      keywords: 'ai voice deception system drdo nemo speech project defense speaker diarization',
+      action: () => {
+        onClose();
+        scrollToSection('#awards');
       }
     },
 
@@ -143,7 +184,7 @@ export const CommandPalette = ({ isOpen, onClose, onStartVoice }) => {
       id: 'degree-nsec',
       category: 'EXPERIENCE & EDUCATION',
       title: 'B.Tech CSE • Netaji Subhas Engineering College',
-      subtitle: 'Computer Science & Engineering (2022 – 2026)',
+      subtitle: 'Computer Science & Engineering (2022 – 2026) • CGPA 7.57',
       icon: GraduationCap,
       badge: 'Degree',
       keywords: 'nsec netaji subhas engineering college btech degree education bachelor',
@@ -156,7 +197,7 @@ export const CommandPalette = ({ isOpen, onClose, onStartVoice }) => {
       id: 'gnx-leadership',
       category: 'EXPERIENCE & EDUCATION',
       title: 'Vice President @ GNX (Linux Community)',
-      subtitle: 'Official GNU/Linux & open-source student developers group',
+      subtitle: 'Official GNU/Linux & open-source student developers group (Apr 2025 – Dec 2025)',
       icon: Terminal,
       badge: 'Leadership',
       keywords: 'gnx linux gnu open source leadership vice president bash sysadmin',

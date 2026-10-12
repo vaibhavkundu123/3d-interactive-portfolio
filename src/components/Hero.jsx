@@ -461,10 +461,10 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
             lineHeight: 1.75,
             maxWidth: 550
           }}>
-            <strong>B.Tech in Computer Science & Engineering</strong> at <strong>Netaji Subhas Engineering College</strong>.
-            Done Research Trainee internship at <strong>DRDO (Centre for Airborne Systems)</strong> developing tactical speech diarization systems with NVIDIA NeMo,
-            with prior internships at <strong>IEEE CIS</strong> and more.
-            Co-author & winner of the prestigious <strong>IEEE SPACE 2026 Best Paper Award</strong> for pioneering AI voice deception in aerospace and defense.
+            <strong>B.Tech in Computer Science & Engineering (CGPA 7.57)</strong> at <strong>Netaji Subhas Engineering College</strong>.
+            Research Trainee at <strong>DRDO (Centre for Airborne Systems)</strong> developing tactical speech systems with NVIDIA NeMo,
+            with prior internships at <strong>IEEE CIS</strong>, <strong>Sasken</strong>, <strong>Celebal</strong>, and <strong>Infosys</strong>.
+            Co-author & 2x Best Paper Award winner (<strong>ICDMIS 2026 by Springer</strong> and <strong>IEEE SPACE 2026</strong>).
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#64748b', fontSize: 13, flexWrap: 'wrap' }}>

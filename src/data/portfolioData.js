@@ -13,7 +13,7 @@ export const PORTFOLIO_DATA = {
   taglines: [
     "Machine Learning Researcher",
     "Research Trainee @ DRDO (CABS)",
-    "IEEE Best Paper Award Winner",
+    "2x Best Paper Award Winner",
     "Deep Learning & Speech AI Engineer",
     "Computer Science Developer"
   ],
@@ -22,9 +22,36 @@ export const PORTFOLIO_DATA = {
 
   stats: [
     { label: "Research Venue", value: "DRDO CABS" },
-    { label: "Best Paper", value: "IEEE SPACE '26" },
-    { label: "Degree", value: "B.Tech CSE" },
+    { label: "Best Papers", value: "2x Awards" },
+    { label: "Degree", value: "B.Tech CSE (7.57)" },
     { label: "Leadership", value: "VP @ GNX" }
+  ],
+
+  majorProjects: [
+    {
+      title: "AI-Based Voice Deception System",
+      type: "Research Project | DRDO (CABS)",
+      location: "Bengaluru, India",
+      period: "Aug 2025 – Feb 2026",
+      awardBadge: "🏆 Best Paper Award – IEEE SPACE 2026",
+      description: [
+        "Engineered a Speaker Identification, Diarization, and Voice Conversion system for aerospace and defense applications using the NVIDIA NeMo framework.",
+        "Co-authored the research paper “AI-Based Voice Deception System for Aerospace and Defense”, which won the Best Paper Award at IEEE SPACE 2026."
+      ],
+      tech: ["NVIDIA NeMo", "MarbleNet", "Titanet-L", "MSDD", "PyTorch", "Speech AI", "DRDO CABS"]
+    },
+    {
+      title: "Forensic DocStitch",
+      type: "Final Year Project",
+      location: "Kolkata, India",
+      period: "2026",
+      awardBadge: "🏆 Best Paper Award – ICDMIS 2026 (Springer)",
+      description: [
+        "Engineered a vision-language reconstruction system capable of stitching and restoring fragmented English documents for cyber forensic applications.",
+        "Co-authored a research paper detailing the methodology, which secured the Best Paper Award at the ICDMIS 2026 conference published by Springer."
+      ],
+      tech: ["Vision-Language Models", "Deep Learning", "Document Reconstruction", "Cyber Forensics", "OpenCV", "Python"]
+    }
   ],
 
   skills: [
@@ -111,6 +138,23 @@ export const PORTFOLIO_DATA = {
 
   achievements: [
     {
+      title: "Best Paper Award – ICDMIS 2026",
+      organization: "Springer",
+      conference: "3rd International Conference on Data Mining and Information Security (ICDMIS 2026)",
+      track: "Track 7 (Eminent College of Management & Technology and SLIIT)",
+      location: "Kolkata, India",
+      date: "Oct 2026",
+      role: "Co-Author",
+      paperTitle: "Forensic DocStitch: Vision-Language Reconstruction of Fragmented English Documents for Cyber Forensics",
+      collaboration: "Springer / Eminent College of Management & Technology and SLIIT",
+      badge: "🏆 Springer Best Paper Winner",
+      highlights: [
+        "Awarded prestigious Best Paper in Track 7 at the 3rd International Conference on Data Mining and Information Security (ICDMIS 2026) organized by Eminent College of Management and Technology and SLIIT.",
+        "Co-authored research paper: “Forensic DocStitch: Vision-Language Reconstruction of Fragmented English Documents for Cyber Forensics”, published by Springer.",
+        "Engineered a vision-language reconstruction system capable of stitching and restoring fragmented English documents for cyber forensic applications."
+      ]
+    },
+    {
       title: "Best Paper Award – IEEE SPACE 2026",
       organization: "IEEE Aerospace & Electronic Systems Society (AESS)",
       conference: "3rd IEEE International Conference on Space, Aerospace & Defence (SPACE 2026)",
@@ -135,9 +179,9 @@ export const PORTFOLIO_DATA = {
       institution: "Netaji Subhas Engineering College",
       location: "Kolkata, India",
       period: "2022 - 2026",
-      score: "CGPA: 7.49 (avg.)",
+      score: "CGPA: 7.57",
       badge: "Higher Education",
-      extras: "Vice President, GNX (Official GNU/Linux group and open-source tech community of NSEC)"
+      extras: "Vice President, GNX (Apr 2025 – Dec 2025) • Previously PR Team Member (Apr 2024 – Apr 2025) — Official GNU/Linux and open-source community of NSEC"
     },
     {
       degree: "Class XII (CBSE Senior Secondary)",
@@ -188,11 +232,11 @@ export const PORTFOLIO_DATA = {
     {
       id: "achievements",
       name: "Trophy Vault",
-      subtitle: "IEEE SPACE 2026 Best Paper",
+      subtitle: "Springer & IEEE Best Papers",
       position: [-40, 0, 35],
       color: "#f59e0b",
       iconName: "Trophy",
-      description: "Golden award pedestal celebrating the IEEE SPACE 2026 Best Paper honor with DRDO CABS."
+      description: "Golden award pedestal celebrating 2x Best Paper honors at ICDMIS 2026 (Springer) & IEEE SPACE 2026 (DRDO CABS)."
     },
     {
       id: "education",
