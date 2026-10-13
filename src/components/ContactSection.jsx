@@ -141,6 +141,8 @@ export const ContactSection = () => {
             {showJdInput && (
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <textarea
+                  id="jd-input"
+                  name="jdText"
                   rows={3}
                   value={jdText}
                   onChange={(e) => setJdText(e.target.value)}
@@ -196,6 +198,9 @@ export const ContactSection = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18 }}>
                 <input
                   required
+                  id="contact-name"
+                  name="name"
+                  autoComplete="name"
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -212,6 +217,9 @@ export const ContactSection = () => {
                 />
                 <input
                   required
+                  id="contact-email"
+                  name="email"
+                  autoComplete="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -230,6 +238,8 @@ export const ContactSection = () => {
 
               <textarea
                 required
+                id="contact-message"
+                name="message"
                 rows={5}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}

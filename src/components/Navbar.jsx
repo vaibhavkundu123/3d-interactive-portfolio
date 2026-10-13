@@ -30,15 +30,17 @@ export const Navbar = ({ onOpenCommandPalette }) => {
       left: 0,
       right: 0,
       zIndex: 100,
-      padding: scrolled ? '12px 24px' : '20px 32px',
-      background: scrolled ? 'rgba(7, 9, 19, 0.85)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(16px)' : 'none',
-      borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+      padding: scrolled ? '12px 36px' : '18px 48px',
+      background: scrolled ? 'rgba(7, 9, 19, 0.92)' : 'rgba(7, 9, 19, 0.3)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
+      borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(255, 255, 255, 0.03)',
       transition: 'all 0.3s ease'
     }}>
       <div style={{
-        maxWidth: 1280,
+        maxWidth: 1440,
         margin: '0 auto',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between'

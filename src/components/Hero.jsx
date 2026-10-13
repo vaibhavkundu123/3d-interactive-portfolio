@@ -120,9 +120,9 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
-      padding: '110px 32px 70px',
+      padding: '120px 48px 80px',
       overflow: 'hidden',
-      background: 'radial-gradient(circle at 30% 35%, rgba(147, 51, 234, 0.12) 0%, rgba(7, 9, 19, 0) 65%)'
+      background: 'radial-gradient(circle at 25% 35%, rgba(147, 51, 234, 0.14) 0%, rgba(7, 9, 19, 0) 65%)'
     }}>
       {/* Background Radial Glows */}
       <div className="purple-halo" style={{ top: '10%', left: '15%' }} />
@@ -149,13 +149,13 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
       }} />
 
       <div style={{
-        maxWidth: 1280,
+        maxWidth: 1440,
         margin: '0 auto',
         width: '100%',
         display: 'grid',
-        gridTemplateColumns: '1.05fr 1fr',
+        gridTemplateColumns: '1fr 1.15fr',
         alignItems: 'center',
-        gap: 48,
+        gap: 52,
         position: 'relative',
         zIndex: 10
       }} className="hero-grid">
@@ -457,29 +457,92 @@ export const Hero = ({ onRegisterVoiceTrigger }) => {
 
           <p style={{
             fontSize: 15,
-            color: '#94a3b8',
+            color: '#cbd5e1',
             lineHeight: 1.75,
-            maxWidth: 550
+            maxWidth: 680
           }}>
             <strong>B.Tech in Computer Science & Engineering (CGPA 7.57)</strong> at <strong>Netaji Subhas Engineering College</strong>.
-            Research Trainee at <strong>DRDO (Centre for Airborne Systems)</strong> developing tactical speech systems with NVIDIA NeMo,
+            Research Trainee at <strong>DRDO (Centre for Airborne Systems)</strong> developing tactical speech processing systems with NVIDIA NeMo,
             with prior internships at <strong>IEEE CIS</strong>, <strong>Sasken</strong>, <strong>Celebal</strong>, and <strong>Infosys</strong>.
             Co-author & 2x Best Paper Award winner (<strong>ICDMIS 2026 by Springer</strong> and <strong>IEEE SPACE 2026</strong>).
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#64748b', fontSize: 13, flexWrap: 'wrap' }}>
+          {/* Quick Credential & Research Highlights Matrix (Fills right column naturally across wide screens) */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 12,
+            marginTop: 4,
+            marginBottom: 4
+          }}>
+            <div className="dev-card" style={{ padding: '12px 16px', borderLeft: '3px solid #38bdf8' }}>
+              <div style={{ fontSize: 11, color: '#38bdf8', fontWeight: 700, letterSpacing: '0.06em' }} className="font-heading">
+                RESEARCH VENUE
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#ffffff', marginTop: 3 }}>
+                DRDO CABS (Defence AI)
+              </div>
+              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+                Tactical Speech & NVIDIA NeMo
+              </div>
+            </div>
+
+            <div className="dev-card" style={{ padding: '12px 16px', borderLeft: '3px solid #f59e0b' }}>
+              <div style={{ fontSize: 11, color: '#f59e0b', fontWeight: 700, letterSpacing: '0.06em' }} className="font-heading">
+                HONORS & AWARDS
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#ffffff', marginTop: 3 }}>
+                2x Best Paper Awards
+              </div>
+              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+                IEEE SPACE & Springer ICDMIS
+              </div>
+            </div>
+
+            <div className="dev-card" style={{ padding: '12px 16px', borderLeft: '3px solid #a855f7' }}>
+              <div style={{ fontSize: 11, color: '#a855f7', fontWeight: 700, letterSpacing: '0.06em' }} className="font-heading">
+                ACADEMIC MATRIX
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#ffffff', marginTop: 3 }}>
+                B.Tech CSE (CGPA 7.57)
+              </div>
+              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+                Netaji Subhas Engineering College
+              </div>
+            </div>
+
+            <div className="dev-card" style={{ padding: '12px 16px', borderLeft: '3px solid #22c55e' }}>
+              <div style={{ fontSize: 11, color: '#22c55e', fontWeight: 700, letterSpacing: '0.06em' }} className="font-heading">
+                LEADERSHIP & ROLES
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: '#ffffff', marginTop: 3 }}>
+                VP @ GNX • IEEE CIS
+              </div>
+              <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
+                Linux Society & Technical Lead
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18, color: '#94a3b8', fontSize: 13, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <MapPin size={16} color="#a855f7" />
               <span>Kolkata, India</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#38bdf8', display: 'inline-block' }} />
-              <span style={{ color: '#94a3b8' }}>IEEE CIS Vice Chair • VP GNX</span>
+              <span style={{ color: '#cbd5e1' }}>IEEE CIS Vice Chair • VP GNX</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+              <a href={`mailto:${PORTFOLIO_DATA.email}`} style={{ color: '#cbd5e1', textDecoration: 'none' }}>
+                {PORTFOLIO_DATA.email}
+              </a>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 12 }}>
+          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
             <a
               href={PORTFOLIO_DATA.resumePath}
               target="_blank"

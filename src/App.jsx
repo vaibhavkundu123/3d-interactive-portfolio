@@ -67,20 +67,30 @@ export default function App() {
       {/* Floating Sparky AI Co-Pilot */}
       <ChatBot />
 
-      {/* Modern Sleek Footer */}
+      {/* Modern Sleek WCAG-Compliant Footer */}
       <footer style={{
         borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-        padding: '36px 24px',
+        padding: '48px 32px 36px',
         textAlign: 'center',
-        color: '#64748b',
+        color: '#cbd5e1',
         fontSize: 14,
         background: '#04060c'
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
-          <div style={{ color: '#ffffff', fontWeight: 800, fontSize: 16 }} className="font-heading">
-            VAIBHAV KUNDU
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
+          <div style={{ color: '#ffffff', fontWeight: 800, fontSize: 18, letterSpacing: '0.05em' }} className="font-heading">
+            &lt;VK /&gt; VAIBHAV KUNDU
           </div>
-          <p>© {new Date().getFullYear()} Vaibhav Kundu. Built with Three.js, React 19 & Google Gemini AI.</p>
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center', fontSize: 13, color: '#94a3b8' }}>
+            <a href="#about" style={{ color: '#cbd5e1', textDecoration: 'none' }}>About</a>
+            <a href="#experience" style={{ color: '#cbd5e1', textDecoration: 'none' }}>Research</a>
+            <a href="#awards" style={{ color: '#cbd5e1', textDecoration: 'none' }}>Awards</a>
+            <a href="#contact" style={{ color: '#cbd5e1', textDecoration: 'none' }}>Contact</a>
+            <a href="https://github.com/vaibhavkundu123" target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none' }}>GitHub ↗</a>
+            <a href="https://linkedin.com/in/vaibhav-kundu-b074a0240" target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none' }}>LinkedIn ↗</a>
+          </div>
+          <p style={{ color: '#94a3b8', fontSize: 13, marginTop: 4 }}>
+            © {new Date().getFullYear()} Vaibhav Kundu. Research Trainee @ DRDO CABS • 2x Best Paper Award Winner. Built with React 19, Three.js & Speech AI.
+          </p>
         </div>
       </footer>
     </div>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://3d-interactive-portfolio-vaibhavkundu.vercel.app/sitemap.xml

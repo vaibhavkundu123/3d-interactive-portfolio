@@ -35,6 +35,7 @@ export const SocialRail = () => {
               target="_blank"
               rel="noreferrer"
               title={s.name}
+              aria-label={`${s.name} Profile`}
               style={{
                 color: '#94a3b8',
                 transition: 'all 0.2s ease',
@@ -57,7 +58,7 @@ export const SocialRail = () => {
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
               }}
             >
-              <Icon size={18} />
+              <Icon size={18} aria-hidden="true" />
             </a>
           );
         })}

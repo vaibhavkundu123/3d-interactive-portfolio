@@ -70,44 +70,18 @@ export const IntroModal = ({ onStartIntro, onDismiss }) => {
           color: '#ffffff'
         }}
       >
-        {/* Close button */}
-        <button
-          onClick={handleSkip}
-          style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            background: 'rgba(255, 255, 255, 0.06)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: '50%',
-            width: 34,
-            height: 34,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#94a3b8',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
-          title="Skip to portfolio"
-        >
-          <X size={18} />
-        </button>
-
-        {/* Status Pill Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {/* Top Header with Pill & Close Button (Flex layout prevents collision on mobile) */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, width: '100%' }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              padding: '6px 14px',
+              padding: '6px 12px',
               background: 'rgba(168, 85, 247, 0.15)',
               border: '1px solid rgba(168, 85, 247, 0.4)',
               borderRadius: 30,
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 700,
               color: '#c084fc',
               letterSpacing: '0.05em'
@@ -115,23 +89,49 @@ export const IntroModal = ({ onStartIntro, onDismiss }) => {
           >
             <span
               style={{
-                width: 8,
-                height: 8,
+                width: 7,
+                height: 7,
                 borderRadius: '50%',
                 background: '#a855f7',
                 boxShadow: '0 0 10px #a855f7',
                 animation: 'pulse 1.8s infinite'
               }}
             />
-            🎙️ INTERACTIVE AUDIO INTRODUCTION
+            🎙️ AUDIO INTRODUCTION
           </div>
+
+          <button
+            onClick={handleSkip}
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '50%',
+              width: 36,
+              height: 36,
+              minWidth: 36,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#cbd5e1',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#cbd5e1')}
+            title="Skip to portfolio"
+            aria-label="Close introduction modal"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        {/* Modal Title */}
+        {/* Modal Title (Semantic heading level 2 via aria-role to preserve h1 hierarchy) */}
         <div>
-          <h2
+          <div
+            role="heading"
+            aria-level="2"
             style={{
-              fontSize: 28,
+              fontSize: 26,
               fontWeight: 800,
               lineHeight: 1.25,
               marginBottom: 8,
@@ -142,7 +142,7 @@ export const IntroModal = ({ onStartIntro, onDismiss }) => {
             className="font-heading"
           >
             Welcome to Vaibhav Kundu's 3D Portfolio
-          </h2>
+          </div>
           <p style={{ color: '#94a3b8', fontSize: 14, lineHeight: 1.6 }}>
             Experience an interactive spoken walkthrough by Vaibhav's 3D developer avatar covering his background in Computer Science, research at DRDO CABS, and tactical speech AI.
           </p>

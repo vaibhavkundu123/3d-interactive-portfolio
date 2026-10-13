@@ -91,6 +91,17 @@ export const AwardsSection = () => {
                 <div style={{ fontSize: 14, color: '#94a3b8', marginTop: 8 }}>
                   In Collaboration with <strong style={{ color: '#38bdf8' }}>{ach.collaboration}</strong> • Track: <strong style={{ color: '#f59e0b' }}>{ach.track}</strong>
                 </div>
+                <div style={{ display: 'flex', gap: 12, marginTop: 14, flexWrap: 'wrap' }}>
+                  <a
+                    href={ach.conference.includes('IEEE') ? 'https://ieeexplore.ieee.org/' : 'https://link.springer.com/'}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-secondary"
+                    style={{ padding: '6px 14px', fontSize: 12, borderRadius: 8, borderColor: 'rgba(56, 189, 248, 0.4)', color: '#38bdf8' }}
+                  >
+                    📄 View Publication Portal ↗
+                  </a>
+                </div>
               </div>
 
               {/* Highlights */}

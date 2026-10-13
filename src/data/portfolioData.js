@@ -34,6 +34,8 @@ export const PORTFOLIO_DATA = {
       location: "Bengaluru, India",
       period: "Aug 2025 – Feb 2026",
       awardBadge: "🏆 Best Paper Award – IEEE SPACE 2026",
+      paperUrl: "https://ieeexplore.ieee.org/",
+      certText: "IEEE SPACE 2026 Best Paper",
       description: [
         "Engineered a Speaker Identification, Diarization, and Voice Conversion system for aerospace and defense applications using the NVIDIA NeMo framework.",
         "Co-authored the research paper “AI-Based Voice Deception System for Aerospace and Defense”, which won the Best Paper Award at IEEE SPACE 2026."
@@ -46,6 +48,8 @@ export const PORTFOLIO_DATA = {
       location: "Kolkata, India",
       period: "2026",
       awardBadge: "🏆 Best Paper Award – ICDMIS 2026 (Springer)",
+      paperUrl: "https://link.springer.com/",
+      certText: "Springer ICDMIS 2026 Best Paper",
       description: [
         "Engineered a vision-language reconstruction system capable of stitching and restoring fragmented English documents for cyber forensic applications.",
         "Co-authored a research paper detailing the methodology, which secured the Best Paper Award at the ICDMIS 2026 conference published by Springer."
@@ -266,30 +270,73 @@ export const PORTFOLIO_CONTEXT = JSON.stringify({
 
 export const FORMSPREE_ID = "mwvnrpog";
 
+/**
+ * Knowledge-base fallback responder so Sparky & Recruiter Pitch never fail
+ * even when offline or before a private VITE_GEMINI_API_KEY is configured.
+ */
+function generateLocalKnowledgeResponse(prompt) {
+  const q = (prompt || "").toLowerCase();
+
+  // JD Auto-Draft Pitch Detection
+  if (q.includes("job description") || q.includes("hiring") || q.includes("role") || q.includes("seeking") || q.length > 120) {
+    return `Dear Hiring Team,\n\nI am writing to express my strong interest in this engineering role. As a B.Tech Computer Science graduate (CGPA 7.57) and Research Trainee at DRDO's Centre for Airborne Systems (CABS), I bring hands-on expertise in developing tactical speech systems, speaker diarization pipelines (NVIDIA NeMo, Titanet-L, MarbleNet), and deep learning architectures with PyTorch and TensorFlow.\n\nMy work in high-stakes defense environments and vision-language systems has received 2x Best Paper Awards (at IEEE SPACE 2026 and Springer ICDMIS 2026). I would love the opportunity to contribute my deep learning, speech AI, and systems engineering skills to your team.\n\nBest regards,\nVaibhav Kundu\n${PORTFOLIO_DATA.email} | ${PORTFOLIO_DATA.phone}`;
+  }
+
+  // DRDO & Defense Speech Systems
+  if (q.includes("drdo") || q.includes("cabs") || q.includes("speech") || q.includes("nemo") || q.includes("titanet") || q.includes("marblenet")) {
+    return `At DRDO (Centre for Airborne Systems - CABS), Vaibhav is a Research Trainee developing speech processing and voice deception detection systems for aerospace & defense tactical communications. He works with the NVIDIA NeMo framework, optimizing Titanet-L for speaker embeddings, MarbleNet for acoustic voice activity detection (VAD), and MSDD (Multi-Scale Diarization Decoders).`;
+  }
+
+  // Best Papers & Publications
+  if (q.includes("paper") || q.includes("award") || q.includes("publication") || q.includes("ieee") || q.includes("springer") || q.includes("icdmis") || q.includes("space")) {
+    return `Vaibhav is a 2x Best Paper Award Winner:\n1. 🏆 IEEE SPACE 2026: "AI-Based Voice Deception System for Aerospace and Defense" (DRDO CABS research).\n2. 🏆 Springer ICDMIS 2026: "Forensic DocStitch" (Vision-Language model system for document fragment reconstruction in cyber forensics).`;
+  }
+
+  // Skills & Tech Stack
+  if (q.includes("skill") || q.includes("tech") || q.includes("language") || q.includes("framework") || q.includes("python") || q.includes("pytorch")) {
+    return `Vaibhav's core technical stack includes:\n• Machine Learning: PyTorch, TensorFlow, NVIDIA NeMo, Scikit-Learn, OpenCV, NLP, Speech Processing\n• Languages: Python, C, Core Java, SQL, PL/SQL, JavaScript\n• Web & Apps: React, Three.js, Django, Android Studio\n• Systems: Linux, Git/GitHub, Operating Systems, Computer Networks.`;
+  }
+
+  // Education & Academics
+  if (q.includes("education") || q.includes("college") || q.includes("cgpa") || q.includes("degree") || q.includes("nsec")) {
+    return `Vaibhav is pursuing his B.Tech in Computer Science & Engineering at Netaji Subhas Engineering College with a CGPA of 7.57. He completed his schooling at South Point High School (ICSE 90.4%, ISC 88.6%). He also serves as Vice President of GNX (Linux & Technical Society).`;
+  }
+
+  // Contact Info
+  if (q.includes("contact") || q.includes("email") || q.includes("phone") || q.includes("hire") || q.includes("reach")) {
+    return `You can reach Vaibhav directly via:\n• Email: ${PORTFOLIO_DATA.email}\n• Phone: ${PORTFOLIO_DATA.phone}\n• LinkedIn: ${PORTFOLIO_DATA.linkedin}\n• GitHub: ${PORTFOLIO_DATA.github}\n• Location: Kolkata, India`;
+  }
+
+  // General Intro Fallback
+  return `Vaibhav Kundu is a Machine Learning Researcher & Software Developer, currently a Research Trainee at DRDO CABS and a 2x Best Paper Award winner (IEEE SPACE & Springer ICDMIS). He specializes in tactical Speech AI, Speaker Diarization, and Deep Learning with PyTorch and NVIDIA NeMo. How can I help you learn more about his work?`;
+}
+
 export const callGeminiAPI = async (prompt, systemInstruction) => {
-  const apiKey = "AIzaSyCcaVzryEL5pb4UbzoeFA2bLJ0qihQaBnc";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+  const apiKey = typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY;
 
-  const payload = {
-    contents: [{ parts: [{ text: prompt }] }],
-    systemInstruction: { parts: [{ text: systemInstruction }] }
-  };
+  if (apiKey) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+      ...(systemInstruction ? { systemInstruction: { parts: [{ text: systemInstruction }] } } : {})
+    };
 
-  const delays = [1000, 2000, 4000];
-
-  for (let i = 0; i < delays.length + 1; i++) {
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "Communication received, but transmission was empty.";
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return text;
+      }
     } catch (error) {
-      if (i === delays.length) return "Subspace communications are experiencing high interference. Please try again shortly!";
-      await new Promise(resolve => setTimeout(resolve, delays[i]));
+      console.warn("Remote Gemini API unreachable, using local knowledge engine:", error);
     }
   }
+
+  // Fallback to intelligent embedded knowledge-base
+  return generateLocalKnowledgeResponse(prompt);
 };
